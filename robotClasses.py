@@ -140,7 +140,7 @@ class DiffDriveRobot:
         Returns:
             Tuple(float,float,float): x,y,th
         """       
-        v, w = self.get_base_velocity(self.wl,self.wr)
+        v, w = self.get_base_velocity(self.wL,self.wR)
         
         self.x = self.x + self.dt*v*np.cos(self.th)
         self.y = self.y + self.dt*v*np.sin(self.th)
