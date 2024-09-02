@@ -196,14 +196,14 @@ class DiffDriveRobot:
 
         # Measure the current speed of motors
         wL_measured, wR_measured = self.get_motor_angular_velocity()
-        self.wL = wL_measured
-        self.wR = wR_measured
+        self.wL = (wL_measured + self.wL)/2 # averaging out
+        self.wR = (wR_measured + self.wR)/2 # averaging out
         
         # Use PI controller
         self.duty_cycle_L, self.duty_cycle_R, self.error_sum_L, self.error_sum_R = self.motor_controller(wL_desired = wL_desired, 
-                                                                                                        wL_measured = wL_measured,
+                                                                                                        wL_measured = self.wL,
                                                                                                         wR_desired = wR_desired, 
-                                                                                                        wR_measured = wR_measured, 
+                                                                                                        wR_measured = self.wR, 
                                                                                                         error_sum_L = self.error_sum_L, 
                                                                                                         error_sum_R = self.error_sum_R, 
                                                                                                         prev_cycle_L= self.duty_cycle_L, 
