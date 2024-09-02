@@ -7,7 +7,7 @@ import gpiozero
 class DiffDriveRobot:
     """DiffDriveRobot class initiates the robot and its drive control. This class is to be called in a rapidly repeating process aside from the main process so that the motor can be continuously controlled. 
     """
-    def __init__(self, dt=0.5, Kp=0.5, Ki=0.01, wheel_radius=0.028, wheel_sep=0.292):
+    def __init__(self, dt=0.5, Kp=0.7, Ki=0.01, wheel_radius=0.028, wheel_sep=0.292):
         self.x = 0.0 # y-position (m)
         self.y = 0.0 # y-position (m)
         self.th = 0.0 # orientation (rad)
@@ -39,8 +39,8 @@ class DiffDriveRobot:
         GPIO.setup(self.motor_B_en, GPIO.OUT)
 
         # Create PWM instance with a frequency of 5000 Hz
-        self.pwm_L = GPIO.PWM(self.motor_A_en, 5000)
-        self.pwm_R = GPIO.PWM(self.motor_B_en, 5000)
+        self.pwm_L = GPIO.PWM(self.motor_A_en, 1000)
+        self.pwm_R = GPIO.PWM(self.motor_B_en, 1000)
 
         # Start PWM with a duty cycle of 0%
         self.pwm_L.start(0)
@@ -268,12 +268,12 @@ def test_no_multiprocess():
     """Testing without multiprocessing
     """
     robot = DiffDriveRobot()
-    speed = 0.1
+    speed = 0.2
     print(f"Driving forward at {speed} m/s")
     
     while True:
         duty_cycle_L, duty_cycle_R, wL_desired, wL_measured, wR_desired, wR_measured = robot.drive(v_desired=speed, w_desired=0)
-        print(f"duty_cycle_L: {duty_cycle_L}, duty_cycle_R: {duty_cycle_R}, wL_desired: {wL_desired}, wL_measured: {wL_measured}, wR_desired: {wR_desired}, wR_measured: {wR_measured}")
+        print(f"duty_cycle_L: {duty_cycle_L:5.2f}, duty_cycle_R: {duty_cycle_R:5.2f}, wL_desired: {wL_desired:5.2f}, wL_measured: {wL_measured:5.2f}, wR_desired: {wR_desired:5.2f}, wR_measured: {wR_measured:5.2f}")
         
 
 if __name__ == "__main__":
