@@ -184,7 +184,7 @@ class DiffDriveRobot:
         error_sum_L = error_sum_L + (wL_desired-wL_measured)
         error_sum_R = error_sum_R + (wR_desired-wR_measured)
         
-        return duty_cycle_L, delta_duty_cycle_R, error_sum_L, error_sum_R
+        return duty_cycle_L, duty_cycle_R, error_sum_L, error_sum_R
     
     def drive(self,v_desired:float,w_desired:float):
         """Drives the robot for a desired velcotiy v (m/s) and desired rotational velocity w (rad/s) by using a PI controller and the measured velocity.
