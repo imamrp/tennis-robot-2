@@ -188,7 +188,7 @@ class DiffDriveRobot:
             w_desired (float): _description_
 
         Returns:
-            Tuple(float,float): The left and right PWM duty cycles respectively. 
+            Tuple(float,float,float,float): The left and right PWM duty cycles, left motor desired and measured speed, right motor desired and measured speed. 
         """
         # Calculate desired left and right motor speed
         wL_desired = (v_desired - self.l*w_desired/2)/self.r
@@ -211,7 +211,7 @@ class DiffDriveRobot:
         self.rotate_motor(dutyCycle=self.duty_cycle_L, motor="l")
         self.rotate_motor(dutyCycle=self.duty_cycle_R, motor="r")
         
-        return self.duty_cycle_L, self.duty_cycle_R
+        return self.duty_cycle_L, self.duty_cycle_R, wL_desired, wL_measured, wR_desired, wR_measured
 
 
 if __name__ == "__main__":
@@ -219,6 +219,8 @@ if __name__ == "__main__":
     
     print("Driving forward at 0.1 m/s")
     
+    while True:
+        robot.drive(v_desired=0.1, w_desired=0)
     
     
     
