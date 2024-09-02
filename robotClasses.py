@@ -269,7 +269,7 @@ def test_no_multiprocess():
     """Testing without multiprocessing
     """
     robot = DiffDriveRobot()
-    speed = 0.2
+    speed = 0.1
     print(f"Driving forward at {speed} m/s")
     
     while True:
