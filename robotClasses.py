@@ -7,7 +7,7 @@ import gpiozero
 class DiffDriveRobot:
     """DiffDriveRobot class initiates the robot and its drive control. This class is to be called in a rapidly repeating process aside from the main process so that the motor can be continuously controlled. 
     """
-    def __init__(self, dt=0.05, Kp=0.1, Ki=0.0, wheel_radius=0.028, wheel_sep=0.292):
+    def __init__(self, dt=0.075, Kp=0.1, Ki=0.0, wheel_radius=0.028, wheel_sep=0.292):
         self.x = 0.0 # y-position (m)
         self.y = 0.0 # y-position (m)
         self.th = 0.0 # orientation (rad)
@@ -216,7 +216,7 @@ class DiffDriveRobot:
         # Position update
         self.position_update()
         
-        return self.duty_cycle_L, self.duty_cycle_R, wL_desired, wL_measured, wR_desired, wR_measured
+        return self.duty_cycle_L, self.duty_cycle_R, wL_desired, self.wL, wR_desired, self.wR
 
 ### Tests for the code
 # Multiprocessing code
