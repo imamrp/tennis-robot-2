@@ -7,7 +7,7 @@ import gpiozero
 class DiffDriveRobot:
     """DiffDriveRobot class initiates the robot and its drive control. This class is to be called in a rapidly repeating process aside from the main process so that the motor can be continuously controlled. 
     """
-    def __init__(self, dt=0.075, Kp=0.1, Ki=0.0, wheel_radius=0.028, wheel_sep=0.292):
+    def __init__(self, dt=0.075, Kp=0.1, Ki=0.01, wheel_radius=0.028, wheel_sep=0.292):
         self.x = 0.0 # y-position (m)
         self.y = 0.0 # y-position (m)
         self.th = 0.0 # orientation (rad)
@@ -167,8 +167,8 @@ class DiffDriveRobot:
             Tuple(int,int,float,float): Duty cycle of the left motor, duty cycle of the right motor, New accumulative sum of the error in left motor, and new accumulative sum of the error in right motor
         """
         # PI Controller: finding change in duty cycle needed to get to reference speed 
-        delta_duty_cycle_L = self.Kp*(wL_desired-wL_measured) + self.Ki*error_sum_L
-        delta_duty_cycle_R = self.Kp*(wR_desired-wR_measured) + self.Ki*error_sum_R
+        delta_duty_cycle_L = self.Kp*(wL_desired-wL_measured) + self.Ki*error_sum_L*self.dt
+        delta_duty_cycle_R = self.Kp*(wR_desired-wR_measured) + self.Ki*error_sum_R*self.dt
         
         # Getting new duty cycle
         duty_cycle_L = min(max(-100,prev_cycle_L + delta_duty_cycle_L),100)
