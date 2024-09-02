@@ -174,11 +174,11 @@ class DiffDriveRobot:
         duty_cycle_L = min(max(-100,prev_cycle_L + delta_duty_cycle_L),100)
         duty_cycle_R = min(max(-100,prev_cycle_R + delta_duty_cycle_R),100)
         
-        if (duty_cycle_L*wL_desired < 0): #If duty cycle and desired w are in oposite directions (prevents wheel from oscillating)
-            duty_cycle_L = 0
+        # if (duty_cycle_L*wL_desired < 0): #If duty cycle and desired w are in oposite directions (prevents wheel from oscillating)
+        #     duty_cycle_L = 0
 
-        if (duty_cycle_R*wR_desired < 0): #If duty cycle and desired w are in oposite directions (prevents wheel from oscillating)
-            duty_cycle_R = 0
+        # if (duty_cycle_R*wR_desired < 0): #If duty cycle and desired w are in oposite directions (prevents wheel from oscillating)
+        #     duty_cycle_R = 0
         
         # Error accumulation
         error_sum_L = error_sum_L + (wL_desired-wL_measured)
