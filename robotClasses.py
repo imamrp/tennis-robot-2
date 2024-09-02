@@ -171,8 +171,8 @@ class DiffDriveRobot:
         delta_duty_cycle_R = self.Kp*(wR_desired-wR_measured) + self.Ki*error_sum_R
         
         # Getting new duty cycle
-        duty_cycle_L = min(max(-1,prev_cycle_L + delta_duty_cycle_L),1)
-        duty_cycle_L = min(max(-1,prev_cycle_R + delta_duty_cycle_R),1)
+        duty_cycle_L = min(max(-100,prev_cycle_L + delta_duty_cycle_L),100)
+        duty_cycle_R = min(max(-100,prev_cycle_R + delta_duty_cycle_R),100)
         
         # Error accumulation
         error_sum_L = error_sum_L + (wL_desired-wL_measured)
