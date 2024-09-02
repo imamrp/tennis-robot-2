@@ -1,24 +1,24 @@
 import time, math
+import matplotlib.pyplot as plt
 import numpy as np
 import RPi.GPIO as GPIO
 import gpiozero
 
 class DiffDriveRobot:
-    
-    def __init__(self, wheel_radius=0.028, wheel_sep=0.292):
+    def __init__(self, dt=0.1, Kp=0.1, Ki=0.01, wheel_radius=0.028, wheel_sep=0.292):
+        self.x = 0.0 # y-position (m)
+        self.y = 0.0 # y-position (m)
+        self.th = 0.0 # orientation (rad)
         
-        self.x = 0.0 # y-position
-        self.y = 0.0 # y-position 
-        self.th = 0.0 # orientation
+        self.wL = 0.0 #rotational velocity left wheel (rad/s)
+        self.wR = 0.0 #rotational velocity right wheel
         
-        #self.wl = 0.0 #rotational velocity left wheel
-        #self.wr = 0.0 #rotational velocity right wheel
-        
-        #self.dt = dt
+        self.dt = dt # Pause time for calculating measured speed
         
         self.r = wheel_radius
         self.l = wheel_sep
 
+        # Set pins
         self.motor_A_in1 = 19
         self.motor_A_in2 = 26
         self.motor_A_en = 13
@@ -36,160 +36,189 @@ class DiffDriveRobot:
         GPIO.setup(self.motor_A_en, GPIO.OUT)
         GPIO.setup(self.motor_B_en, GPIO.OUT)
 
-        # Create PWM instance with a frequency of 100 Hz
-        self.pwm_L = GPIO.PWM(self.motor_A_en, 1000)
-        self.pwm_R = GPIO.PWM(self.motor_B_en, 1000)
+        # Create PWM instance with a frequency of 5000 Hz
+        self.pwm_L = GPIO.PWM(self.motor_A_en, 5000)
+        self.pwm_R = GPIO.PWM(self.motor_B_en, 5000)
 
         # Start PWM with a duty cycle of 0%
         self.pwm_L.start(0)
         self.pwm_R.start(0)
 
-        # setting encoders TODO: change to correct encoder output pins
+        # setting encoders
         self.encoderR = gpiozero.RotaryEncoder(a=5, b=6,max_steps=100000)
         self.encoderL = gpiozero.RotaryEncoder(a=2, b=3,max_steps=100000)
+        
+        # Controller parameters
+        self.Kp = Kp
+        self.Ki = Ki
+        self.error_sum_L = 0 # Error of desired 
+        self.error_sum_R = 0
+        self.duty_cycle_L = 0 
+        self.duty_cycle_R = 0
+        
+    # Motor speed and sending power to it
+    def get_motor_angular_velocity(self):
+        """Gets the angular velocity of motor from the encoder
 
-    # defining movement functions
-    '''
-    Function Name: Stop
-    stops all movement in the wheels
-    Input: None
-    Output: None
-    '''
-    def stop(self):
-        GPIO.output(self.motor_B_in1, GPIO.LOW)
-        GPIO.output(self.motor_B_in2, GPIO.LOW)
-        GPIO.output(self.motor_A_in1, GPIO.LOW)
-        GPIO.output(self.motor_A_in2, GPIO.LOW)
-        self.pwm_L.ChangeDutyCycle(0)
-        self.pwm_R.ChangeDutyCycle(0)
-    
-    '''
-    Function Name: Forward
-    Moves the robot forward with a particular duty cycle
-    Input: integer from 0 to 100 based on how fast the motors will run
-    Output: None
-    '''
-    def forward(self, duty_cycleL: int, duty_cycleR: int):
-        
-        self.pwm_L.ChangeDutyCycle(duty_cycleL)
-        self.pwm_R.ChangeDutyCycle(duty_cycleR)
-        # motor 1 direction
-        GPIO.output(self.motor_A_in1, GPIO.HIGH)
-        GPIO.output(self.motor_A_in2, GPIO.LOW)
-        # motor 2 direction
-        GPIO.output(self.motor_B_in1, GPIO.HIGH)
-        GPIO.output(self.motor_B_in2, GPIO.LOW)
-    
-    '''
-    Function Name: backward
-    Moves the robot backward with a particular duty cycle
-    Input: integer from 0 to 100 based on how fast the motors will run
-    Output: None
-    '''
-    def backward(self, duty_cycleL: int, duty_cycleR: int):
-        
-        self.pwm_L.ChangeDutyCycle(duty_cycleL)
-        self.pwm_R.ChangeDutyCycle(duty_cycleR)
-        # motor 1 direction
-        GPIO.output(self.motor_A_in1, GPIO.LOW)
-        GPIO.output(self.motor_A_in2, GPIO.HIGH)
-        # motor 2 direction
-        GPIO.output(self.motor_B_in1, GPIO.LOW)
-        GPIO.output(self.motor_B_in2, GPIO.HIGH)
-    
-    '''
-    Function Name: left
-    Moves the robot to the right on the spot with a particular duty cycle
-    Input: integer from 0 to 100 based on how fast the motors will run
-    Output: None
-    '''
-    def left(self, duty_cycleL: int, duty_cycleR: int):
-        
-        self.pwm_L.ChangeDutyCycle(duty_cycleL)
-        self.pwm_R.ChangeDutyCycle(duty_cycleR)
-        # motor 1 direction
-        GPIO.output(self.motor_A_in1, GPIO.HIGH)
-        GPIO.output(self.motor_A_in2, GPIO.LOW)
-        # motor 2 direction
-        GPIO.output(self.motor_B_in1, GPIO.LOW)
-        GPIO.output(self.motor_B_in2, GPIO.HIGH)
-        
-    '''
-    Function Name: right
-    Moves the robot to the left on the spot with a particular duty cycle
-    Input: integer from 0 to 100 based on how fast the motors will run
-    Output: None
-    '''
-    def right(self, duty_cycleL: int, duty_cycleR: int):
-        
-        self.pwm_L.ChangeDutyCycle(duty_cycleL)
-        self.pwm_R.ChangeDutyCycle(duty_cycleR)
-        # motor 1 direction
-        GPIO.output(self.motor_A_in1, GPIO.LOW)
-        GPIO.output(self.motor_A_in2, GPIO.HIGH)
-        # motor 2 direction
-        GPIO.output(self.motor_B_in1, GPIO.HIGH)
-        GPIO.output(self.motor_B_in2, GPIO.LOW)
-    
-    
-    # Kinematic motion model
-    def pose_update(self, mode):
-        if mode == 'straight':
-            # getting distance travelled by each wheel
-            dist_R = 2 * self.r * np.pi * -self.encoderR.steps / 900 
-            dist_L = 2 * self.r * np.pi * -self.encoderL.steps / 900 
-            dist = (dist_R + dist_L) / 2
-            delta_th = 0
-        else:         # turning
-            dist = 0
-            delta_th = (self.encoderL.steps - self.encoderR.steps) * (9 / 190)
-        
-        self.x = self.x + dist * np.cos(self.th)
-        self.y = self.y + dist * np.sin(self.th)
-        self.th = self.th + delta_th
-        self.th = (self.th + 180) % (360) - 180 # clamp theta to [-180, 180]
-
+        Returns:
+            Tuple(Float,Float): The left and right angular veloctiy in rad/s respectively
+        """
+        # Reset encoder count
         self.encoderL.steps = 0
         self.encoderR.steps = 0
+
+        time.sleep(self.dt)
+
+        # Counts per second
+        countsPerSecondR = -self.encoderR.steps/self.dt
+        countsPerSecondL = -self.encoderL.steps/self.dt
+
+        # Find angular velocity (Rough speed limit is 1400 counts per second) TODO: test limit on different surfaces
+        # 900 counts in 1 revolution
+        wR = (2*math.pi) * countsPerSecondR / 900
+        wL = (2*math.pi) * countsPerSecondL / 900
+
+        return wL, wR # in radians per second limit approx. 9.8 rad/s
+
+    def rotate_motor(self, dutyCycle:int, motor:str):
+        """Rotates a specified motor by a set duty cycle
+
+        Args:
+            dutyCycle (int): Int from 0-100 showing the duty cycle
+            motor (str): 'l' specifies the left motor whereas 'r' specifies the right motor
+
+        Raises:
+            Exception: If 'l' or 'r' not specified then the motor control will be invalid.
+        """
+        if motor == 'r':        # right motor (assuming motor A from code)
+            if dutyCycle >= 0:  # forward
+                GPIO.output(self.motor_A_in1, GPIO.HIGH)
+                GPIO.output(self.motor_A_in2, GPIO.LOW)
+            else:               # backward
+                GPIO.output(self.motor_A_in1, GPIO.LOW)
+                GPIO.output(self.motor_A_in2, GPIO.HIGH)
+            
+            self.pwm_R.ChangeDutyCycle(abs(dutyCycle))
+            
+        elif motor == 'l':      # left motor (assuming motor B from code)
+            if dutyCycle >= 0:  # forward
+                GPIO.output(self.motor_B_in1, GPIO.HIGH)
+                GPIO.output(self.motor_B_in2, GPIO.LOW)
+            else:               # backward
+                GPIO.output(self.motor_B_in1, GPIO.LOW)
+                GPIO.output(self.motor_B_in2, GPIO.HIGH)
+            
+            self.pwm_L.ChangeDutyCycle(abs(dutyCycle))
+            
+        else:
+            raise Exception("Incorrect motor specified. Please specify either 'l' for left or 'r' for right motor")
+        
+        return
+
+    # Velcoity and position updates
+    def get_base_velocity(self, wL:float, wR:float):
+        """Calculates the positional and rotational veloctiy of the robot based on the left and right motor's angular velocity
+
+        Args:
+            wl (float): Angular velocity of left motor in rad/s
+            wr (float): Angular velocity of right motor in rad/s
+
+        Returns:
+            Tuple(Float,Float): The velocity v (m/s) and angular velocity w (rad/s) of the robot. +v is forwards and +w is clockwise turning.
+        """
+        v = (wL*self.r + wR*self.r)/2.0
+        
+        w = (wL*self.r - wR*self.r)/self.l
+        
+        return v, w
+
+    def position_update(self):
+        """Updates the robot's position (x,y) and its angle (th) relative to the starting point
+
+        Returns:
+            Tuple(float,float,float): x,y,th
+        """
+        self.wr, self.wl = self.get_angular_velocity()
+        
+        v, w = self.base_velocity(self.wl,self.wr)
+        
+        self.x = self.x + self.dt*v*np.cos(self.th)
+        self.y = self.y + self.dt*v*np.sin(self.th)
+        self.th = self.th + w*self.dt
         
         return self.x, self.y, self.th
 
-# class RobotController:
-    
-#     def __init__(self,Kp=0.1,Ki=0.01,wheel_radius=0.028, wheel_sep=0.292):
-        
-#         self.Kp = Kp
-#         self.Ki = Ki
-#         self.r = wheel_radius
-#         self.l = wheel_sep
-#         self.e_sum_l = 0
-#         self.e_sum_r = 0
-#         self.duty_cycle_l = 0
-#         self.duty_cycle_r = 0
-        
-#     def p_control(self,w_desired,w_measured,e_sum, prev_cycle):
-        
-#         duty_cycle = min(max(-1,self.Kp*(w_desired-w_measured) + self.Ki*e_sum),1)
-        
-#         e_sum = e_sum + (w_desired-w_measured)
+    # Motor control and driving
+    # TODO: implement with another thread
+    def motor_controller(self, wL_desired:float, wL_measured:float, wR_desired:float, wR_measured:float, error_sum_L:float, error_sum_R:float, prev_cycle_L:int, prev_cycle_R:int):
+        """Controller for both left and right motors implementing a PI controller
 
-#         # duty cycle can only change 0.2 at a time
-#         duty_cycle = np.clip(duty_cycle, prev_cycle - 0.2, prev_cycle + 0.2)
+        Args:
+            wL_desired (float): Desired angular velocity (rad/s) of the left motor
+            wL_measured (float): Measured angular velocity (rad/s) of the left motor
+            wR_desired (float): Desired angular velocity (rad/s) of the right motor
+            wR_measured (float): Measured angular velocity (rad/s) of the right motor
+            error_sum_L (float): Accumulative sum of the error in left motor
+            error_sum_R (float): Accumulative sum of the error in right motor
+            prev_cycle_L (int): The previous duty cycle of the left motor from 0-100
+            prev_cycle_R (int): The previous duty cycle of the right motor from 0-100
+
+        Returns:
+            Tuple(int,int,float,float): Duty cycle of the left motor, duty cycle of the right motor, New accumulative sum of the error in left motor, and new accumulative sum of the error in right motor
+        """
+        # PI Controller: finding change in duty cycle needed to get to reference speed 
+        delta_duty_cycle_L = self.Kp*(wL_desired-wL_measured) + self.Ki*error_sum_L
+        delta_duty_cycle_R = self.Kp*(wR_desired-wR_measured) + self.Ki*error_sum_R
         
-#         return duty_cycle, e_sum
+        # Getting new duty cycle
+        duty_cycle_L = min(max(-1,prev_cycle_L + delta_duty_cycle_L),1)
+        duty_cycle_L = min(max(-1,prev_cycle_R + delta_duty_cycle_R),1)
         
+        # Error accumulation
+        error_sum_L = error_sum_L + (wL_desired-wL_measured)
+        error_sum_R = error_sum_R + (wR_desired-wR_measured)
         
-#     def drive(self,v_desired,w_desired,wl,wr):
+        return duty_cycle_L, delta_duty_cycle_R, error_sum_L, error_sum_R
+    
+    def drive(self,v_desired:float,w_desired:float):
+        """Drives the robot for a desired velcotiy v (m/s) and desired rotational velocity w (rad/s) by using a PI controller and the measured velocity.
+
+        Args:
+            v_desired (float): The desired velocity (m/s) of the robot. Positive means driving forward
+            w_desired (float): _description_
+
+        Returns:
+            Tuple(float,float): The left and right PWM duty cycles respectively. 
+        """
+        # Calculate desired left and right motor speed
+        wL_desired = (v_desired - self.l*w_desired/2)/self.r
+        wR_desired = (v_desired + self.l*w_desired/2)/self.r
+
+        # Measure the current speed of motors
+        wL_measured, wR_measured = self.get_motor_angular_velocity()
         
-#         wl_desired = (v_desired - self.l*w_desired/2)/self.r
-#         wr_desired = (v_desired + self.l*w_desired/2)/self.r
-#         #print("desired w:", wl_desired, wr_desired)
+        # Use PI controller
+        self.duty_cycle_L, self.duty_cycle_R, self.error_sum_L, self.error_sum_R = self.motor_controller(wL_desired = wL_desired, 
+                                                                                                        wL_measured = wL_measured,
+                                                                                                        wR_desired = wR_desired, 
+                                                                                                        wR_measured = wR_measured, 
+                                                                                                        error_sum_L = self.error_sum_L, 
+                                                                                                        error_sum_R = self.error_sum_R, 
+                                                                                                        prev_cycle_L= self.duty_cycle_L, 
+                                                                                                        prev_cycle_R= self.duty_cycle_R)
         
-#         duty_cycle_l,self.e_sum_l = self.p_control(wl_desired,wl,self.e_sum_l, self.duty_cycle_l)
-#         duty_cycle_r,self.e_sum_r = self.p_control(wr_desired,wr,self.e_sum_r, self.duty_cycle_r)
-#         # updating new duty cycles
-#         self.duty_cycle_l = duty_cycle_l
-#         self.duty_cycle_r = duty_cycle_r
-#         #print('sum errors', self.e_sum_l,self.e_sum_r)
+        # Send PWM to wheels
+        self.rotate_motor(dutyCycle=self.duty_cycle_L, motor="l")
+        self.rotate_motor(dutyCycle=self.duty_cycle_R, motor="r")
         
-#         return duty_cycle_l, duty_cycle_r
+        return self.duty_cycle_L, self.duty_cycle_R
+
+
+if __name__ == "__main__":
+    robot = DiffDriveRobot()
+    
+    print("Driving forward at 0.1 m/s")
+    
+    
+    
+    
