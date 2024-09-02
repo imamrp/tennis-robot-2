@@ -99,7 +99,7 @@ class DiffDriveRobot:
             else:               # backward
                 GPIO.output(self.motor_A_in1, GPIO.LOW)
                 GPIO.output(self.motor_A_in2, GPIO.HIGH)
-            
+            print(f"Duty cycle right: {abs(dutyCycle)}")
             self.pwm_R.ChangeDutyCycle(abs(dutyCycle))
             
         elif motor == 'l':      # left motor (assuming motor B from code)
@@ -109,7 +109,8 @@ class DiffDriveRobot:
             else:               # backward
                 GPIO.output(self.motor_B_in1, GPIO.LOW)
                 GPIO.output(self.motor_B_in2, GPIO.HIGH)
-            
+                
+            print(f"Duty cycle left: {abs(dutyCycle)}")
             self.pwm_L.ChangeDutyCycle(abs(dutyCycle))
             
         else:
