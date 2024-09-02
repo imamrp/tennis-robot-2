@@ -1,11 +1,13 @@
-import time, math
+import time, math, random, multiprocessing
 import matplotlib.pyplot as plt
 import numpy as np
 import RPi.GPIO as GPIO
 import gpiozero
 
 class DiffDriveRobot:
-    def __init__(self, dt=0.1, Kp=0.1, Ki=0.01, wheel_radius=0.028, wheel_sep=0.292):
+    """DiffDriveRobot class initiates the robot and its drive control. This class is to be called in a rapidly repeating process aside from the main process so that the motor can be continuously controlled. 
+    """
+    def __init__(self, dt=0.1, Kp=5, Ki=0.01, wheel_radius=0.028, wheel_sep=0.292):
         self.x = 0.0 # y-position (m)
         self.y = 0.0 # y-position (m)
         self.th = 0.0 # orientation (rad)
@@ -137,10 +139,8 @@ class DiffDriveRobot:
 
         Returns:
             Tuple(float,float,float): x,y,th
-        """
-        self.wr, self.wl = self.get_angular_velocity()
-        
-        v, w = self.base_velocity(self.wl,self.wr)
+        """       
+        v, w = self.get_base_velocity(self.wl,self.wr)
         
         self.x = self.x + self.dt*v*np.cos(self.th)
         self.y = self.y + self.dt*v*np.sin(self.th)
@@ -149,7 +149,7 @@ class DiffDriveRobot:
         return self.x, self.y, self.th
 
     # Motor control and driving
-    # TODO: implement with another thread
+    # TODO: implement with multiprocess
     def motor_controller(self, wL_desired:float, wL_measured:float, wR_desired:float, wR_measured:float, error_sum_L:float, error_sum_R:float, prev_cycle_L:int, prev_cycle_R:int):
         """Controller for both left and right motors implementing a PI controller
 
@@ -185,7 +185,7 @@ class DiffDriveRobot:
 
         Args:
             v_desired (float): The desired velocity (m/s) of the robot. Positive means driving forward
-            w_desired (float): _description_
+            w_desired (float): The desired rotational velocity (rad/s) of the robot. Positive means clockwise turning.
 
         Returns:
             Tuple(float,float,float,float): The left and right PWM duty cycles, left motor desired and measured speed, right motor desired and measured speed. 
@@ -196,6 +196,8 @@ class DiffDriveRobot:
 
         # Measure the current speed of motors
         wL_measured, wR_measured = self.get_motor_angular_velocity()
+        self.wL = wL_measured
+        self.wR = wR_measured
         
         # Use PI controller
         self.duty_cycle_L, self.duty_cycle_R, self.error_sum_L, self.error_sum_R = self.motor_controller(wL_desired = wL_desired, 
@@ -211,16 +213,64 @@ class DiffDriveRobot:
         self.rotate_motor(dutyCycle=self.duty_cycle_L, motor="l")
         self.rotate_motor(dutyCycle=self.duty_cycle_R, motor="r")
         
+        # Position update
+        self.position_update()
+        
         return self.duty_cycle_L, self.duty_cycle_R, wL_desired, wL_measured, wR_desired, wR_measured
 
+### Tests for the code
+# Multiprocessing code
+def set_speed_process(v_desired):
+    """Process that randomly sets speed of the robot. This can be thought of the 'main' process of the robot. 
 
-if __name__ == "__main__":
+    Args:
+        v_desired (float): The desired speed of the robot
+    """
+    while True:
+        v_desired.value = random.choice([-0.1,0,0.1])
+        print(f"\n\n\n\nNew Speed: {v_desired.value}")
+        time.sleep(5)
+        
+def robot_control_process(v_desired):
+    """The process that controls the robot's motors continuously and repeatedly.
+
+    Args:
+        v_desired (float): The desired speed of the robot
+    """
+    robot = DiffDriveRobot()
+    
+    while True:
+        duty_cycle_L, duty_cycle_R, wL_desired, wL_measured, wR_desired, wR_measured = robot.drive(v_desired=v_desired.value, w_desired=0)
+        print(f"duty_cycle_L: {duty_cycle_L}, duty_cycle_R: {duty_cycle_R}, wL_desired: {wL_desired}, wL_measured: {wL_measured}, wR_desired: {wR_desired}, wR_measured: {wR_measured}")
+
+def test_multiprocess():
+    """Test function to see the functionality of the robot class.
+    """
+    v_desired = multiprocessing.Value('i', 0)
+    
+    process_set_speed = multiprocessing.Process(target=set_speed_process, args=[v_desired])
+    process_set_speed.start()
+    
+    process_robot_control = multiprocessing.Process(target=robot_control_process, args=[v_desired])
+    process_robot_control.start()
+    
+    process_set_speed.join()
+    process_robot_control.join()
+
+# No multiprocessing code
+def test_no_multiprocess():
+    """Testing without multiprocessing
+    """
     robot = DiffDriveRobot()
     
     print("Driving forward at 0.1 m/s")
     
     while True:
-        robot.drive(v_desired=0.1, w_desired=0)
+        duty_cycle_L, duty_cycle_R, wL_desired, wL_measured, wR_desired, wR_measured = robot.drive(v_desired=0.1, w_desired=0)
+        print(f"duty_cycle_L: {duty_cycle_L}, duty_cycle_R: {duty_cycle_R}, wL_desired: {wL_desired}, wL_measured: {wL_measured}, wR_desired: {wR_desired}, wR_measured: {wR_measured}")
+        
+
+if __name__ == "__main__":
+    test_no_multiprocess()
     
-    
-    
+    # test_multiprocess()
