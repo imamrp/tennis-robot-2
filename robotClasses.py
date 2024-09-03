@@ -40,8 +40,8 @@ class DiffDriveRobot:
         GPIO.setup(self.motor_B_en, GPIO.OUT)
 
         # Create PWM instance with a frequency of 5000 Hz
-        self.pwm_L = GPIO.PWM(self.motor_B_en, 500)
-        self.pwm_R = GPIO.PWM(self.motor_A_en, 500)
+        self.pwm_L = GPIO.PWM(self.motor_B_en, 5000)
+        self.pwm_R = GPIO.PWM(self.motor_A_en, 5000)
 
         # Start PWM with a duty cycle of 0%
         self.pwm_L.start(0)
