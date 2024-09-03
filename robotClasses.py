@@ -252,7 +252,7 @@ def robot_control_process(v_desired,w_desired):
     robot = DiffDriveRobot()
     
     while True:
-        duty_cycle_L, duty_cycle_R, wL_desired, wL_measured, wR_desired, wR_measured = robot.drive(v_desired=v_desired.value, w_desired=0)
+        duty_cycle_L, duty_cycle_R, wL_desired, wL_measured, wR_desired, wR_measured = robot.drive(v_desired=v_desired.value, w_desired=w_desired.value)
         print(f"duty_cycle_L: {duty_cycle_L:5.2f}, duty_cycle_R: {duty_cycle_R:5.2f}, wL_desired: {wL_desired:5.2f}, wL_measured: {wL_measured:5.2f}, wR_desired: {wR_desired:5.2f}, wR_measured: {wR_measured:5.2f}")
         
 def test_multiprocess():
