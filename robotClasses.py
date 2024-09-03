@@ -279,6 +279,6 @@ def test_no_multiprocess():
         
 
 if __name__ == "__main__":
-    test_no_multiprocess()
+    # test_no_multiprocess()
     
-    # test_multiprocess()
+    test_multiprocess()
