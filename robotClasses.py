@@ -100,7 +100,6 @@ class DiffDriveRobot:
             else:               # backward
                 GPIO.output(self.motor_A_in1, GPIO.LOW)
                 GPIO.output(self.motor_A_in2, GPIO.HIGH)
-            print(f"Duty cycle right: {abs(dutyCycle)}")
             self.pwm_R.ChangeDutyCycle(abs(dutyCycle))
             
         elif motor == 'l':      # left motor (assuming motor B from code)
@@ -110,8 +109,6 @@ class DiffDriveRobot:
             else:               # backward
                 GPIO.output(self.motor_B_in1, GPIO.LOW)
                 GPIO.output(self.motor_B_in2, GPIO.HIGH)
-                
-            print(f"Duty cycle left: {abs(dutyCycle)}")
             self.pwm_L.ChangeDutyCycle(abs(dutyCycle))
             
         else:
@@ -235,7 +232,7 @@ def set_speed_process(v_desired):
         v_desired (float): The desired speed of the robot
     """
     while True:
-        v_desired.value = float(random.choice([-0.1,0,0.1]))
+        v_desired.value = float(random.choice([-0.2,-0.1,0,0.1,0.2]))
         print(f"\n\n\n\nNew Speed: {v_desired.value}")
         time.sleep(5)
         
@@ -249,8 +246,8 @@ def robot_control_process(v_desired):
     
     while True:
         duty_cycle_L, duty_cycle_R, wL_desired, wL_measured, wR_desired, wR_measured = robot.drive(v_desired=v_desired.value, w_desired=0)
-        print(f"duty_cycle_L: {duty_cycle_L}, duty_cycle_R: {duty_cycle_R}, wL_desired: {wL_desired}, wL_measured: {wL_measured}, wR_desired: {wR_desired}, wR_measured: {wR_measured}")
-
+        print(f"duty_cycle_L: {duty_cycle_L:5.2f}, duty_cycle_R: {duty_cycle_R:5.2f}, wL_desired: {wL_desired:5.2f}, wL_measured: {wL_measured:5.2f}, wR_desired: {wR_desired:5.2f}, wR_measured: {wR_measured:5.2f}")
+        
 def test_multiprocess():
     """Test function to see the functionality of the robot class.
     """
