@@ -225,18 +225,25 @@ class DiffDriveRobot:
 
 ### Tests for the code
 # Multiprocessing code
-def set_speed_process(v_desired):
+def set_speed_process(v_desired,w_desired):
     """Process that randomly sets speed of the robot. This can be thought of the 'main' process of the robot. 
 
     Args:
         v_desired (float): The desired speed of the robot
     """
     while True:
-        v_desired.value = float(random.choice([-0.2,-0.1,0,0.1,0.2]))
-        print(f"\n\n\n\nNew Speed: {v_desired.value}")
-        time.sleep(5)
+        if bool(random.getrandbits(1)):
+            v_desired.value = float(random.choice([-0.2,-0.1,0,0.1,0.2]))
+            w_desired.value = float(0)
+            print(f"\n\n\n\nNew Speed: v={v_desired.value}; w={w_desired.value}")
+            time.sleep(5)
+        else:
+            w_desired.value = float(random.choice([-0.2,-0.1,0,0.1,0.2]))
+            v_desired.value = float(0)
+            print(f"\n\n\n\nNew Speed: v={v_desired.value}; w={w_desired.value}")
+            time.sleep(5)
         
-def robot_control_process(v_desired):
+def robot_control_process(v_desired,w_desired):
     """The process that controls the robot's motors continuously and repeatedly.
 
     Args:
@@ -252,11 +259,12 @@ def test_multiprocess():
     """Test function to see the functionality of the robot class.
     """
     v_desired = multiprocessing.Value('f', 0)
+    w_desired = multiprocessing.Value('f', 0)
     
-    process_set_speed = multiprocessing.Process(target=set_speed_process, args=[v_desired])
+    process_set_speed = multiprocessing.Process(target=set_speed_process, args=[v_desired, w_desired])
     process_set_speed.start()
     
-    process_robot_control = multiprocessing.Process(target=robot_control_process, args=[v_desired])
+    process_robot_control = multiprocessing.Process(target=robot_control_process, args=[v_desired, w_desired])
     process_robot_control.start()
     
     process_set_speed.join()
