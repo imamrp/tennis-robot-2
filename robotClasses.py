@@ -238,7 +238,7 @@ def set_speed_process(v_desired,w_desired):
         #     print(f"\n\n\n\nNew Speed: v={v_desired.value}; w={w_desired.value}")
         #     time.sleep(5)
         # else:
-        w_desired.value = float(random.choice([-0.2,-0.1,0,0.1,0.2]))
+        w_desired.value = float(random.choice([-0.5,0,0.5]))
         v_desired.value = float(0)
         print(f"\n\n\n\nNew Speed: v={v_desired.value}; w={w_desired.value}")
         time.sleep(5)
