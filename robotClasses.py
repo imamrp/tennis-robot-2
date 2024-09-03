@@ -235,7 +235,7 @@ def set_speed_process(v_desired):
         v_desired (float): The desired speed of the robot
     """
     while True:
-        v_desired.value = random.choice([-0.1,0,0.1])
+        v_desired.value = float(random.choice([-0.1,0,0.1]))
         print(f"\n\n\n\nNew Speed: {v_desired.value}")
         time.sleep(5)
         
@@ -254,7 +254,7 @@ def robot_control_process(v_desired):
 def test_multiprocess():
     """Test function to see the functionality of the robot class.
     """
-    v_desired = multiprocessing.Value('i', 0)
+    v_desired = multiprocessing.Value('f', 0)
     
     process_set_speed = multiprocessing.Process(target=set_speed_process, args=[v_desired])
     process_set_speed.start()
