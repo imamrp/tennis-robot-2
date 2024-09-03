@@ -23,11 +23,11 @@ class DiffDriveRobot:
         # Set pins
         self.motor_A_in1 = 19
         self.motor_A_in2 = 26
-        self.motor_A_en = 13
+        self.motor_A_en = 13 # right motor
 
         self.motor_B_in2 = 20
         self.motor_B_in1 = 21
-        self.motor_B_en = 12
+        self.motor_B_en = 12 # left motor
 
         # Set GPIO modes
         GPIO.setmode(GPIO.BCM)
@@ -39,8 +39,8 @@ class DiffDriveRobot:
         GPIO.setup(self.motor_B_en, GPIO.OUT)
 
         # Create PWM instance with a frequency of 5000 Hz
-        self.pwm_L = GPIO.PWM(self.motor_A_en, 100)
-        self.pwm_R = GPIO.PWM(self.motor_B_en, 100)
+        self.pwm_L = GPIO.PWM(self.motor_B_en, 100)
+        self.pwm_R = GPIO.PWM(self.motor_A_en, 100)
 
         # Start PWM with a duty cycle of 0%
         self.pwm_L.start(0)
