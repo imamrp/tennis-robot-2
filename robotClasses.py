@@ -1,3 +1,10 @@
+""" 
+By: Imam Prakoso
+This file contains the DiffDriveRobot class which is what controls the robot's movement with its two motors. 
+It is recomended that the robot's motors be continuously controlled in a separate process while the main process
+sets the target angular and positional velocity of the robot.  
+"""
+
 import time, math, random, multiprocessing
 import matplotlib.pyplot as plt
 import numpy as np
