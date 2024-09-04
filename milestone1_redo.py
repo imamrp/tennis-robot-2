@@ -48,7 +48,7 @@ def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=0, Ki=
     w_desired = Kp*error
     
     sum_error += error
-    
+    print(w_desired)
     return w_desired, sum_error
 
 def milestone1_process(v_desired, w_desired, center, radius):
