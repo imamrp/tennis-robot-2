@@ -66,7 +66,8 @@ def milestone1_process(v_desired, w_desired, center, radius):
         # Get the desired rotational velocity
         w_desired.value, alignment_error_sum = allign_to_ball(ball_center=center.value, sum_error=alignment_error_sum, desired_center=340, Kp=0.1, Ki=0.01)
 
-        print(f"Target w: {w_desired.value}, Center: {center.value}, Radius: {radius.value}")
+        if center.value != -1:
+            print(f"Target w: {w_desired.value}, Center: {center.value}, Radius: {radius.value}")
 
     # Stop at the ball
     v_desired.value = 0
