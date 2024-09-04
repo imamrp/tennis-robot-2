@@ -4,7 +4,24 @@ This is a redo of the Milestone 1 task of the tennis robot
 """
 
 from robotClasses import DiffDriveRobot
+import detection
 
+def update_ball_center(center, radius):
+    detector = detection.TennisBallDetector()
+    while True:
+        _, frame = detector.cap.read()
+        detected_balls = detector.process_frame(frame)
+        detected_center = detector.get_circle_1_center(detected_balls)
+        detected_radius = detector.get_circle_1_radius(detected_balls)
+        if detected_center:
+            center.value = detected_center[0]
+            radius.value = detected_radius
+            print(f"X: {center.value} R: {radius.value}")
+            
+        else:
+            center.value = -1
+            radius.value = -1
+            print("Ball not seen")
 
 def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=0.1, Ki=0.01):
     """Function will return a forward velocity and the angular velocity needed to go towards a ball.
@@ -60,4 +77,4 @@ def robot_control_process(v_desired,w_desired):
 
 
 if __name__ == "__main__":
-    
+    update_ball_center(center, radius)
