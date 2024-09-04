@@ -22,7 +22,7 @@ def update_ball_center(center, radius): # Takes approximately 0.2s to process on
             radius.value = -1
         # print(f"X: {center.value} R: {radius.value}")
             
-def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=0, Ki=0):
+def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=1e-3, Ki=0):
     """Function will return a forward velocity and the angular velocity needed to go towards a ball.
     To determine the angular velocity, this function uses a PI controller.
 
@@ -64,7 +64,7 @@ def milestone1_process(v_desired, w_desired, center, radius):
     while radius.value < 130:
         v_desired.value = 0 # Set slow forward speed
         # Get the desired rotational velocity
-        w_desired.value, alignment_error_sum = allign_to_ball(ball_center=center.value, sum_error=alignment_error_sum, desired_center=340, Kp=0.1, Ki=0.01)
+        w_desired.value, alignment_error_sum = allign_to_ball(ball_center=center.value, sum_error=alignment_error_sum, desired_center=340)
 
         if center.value != -1:
             print(f"Target w: {w_desired.value}, Center: {center.value}, Radius: {radius.value}")
