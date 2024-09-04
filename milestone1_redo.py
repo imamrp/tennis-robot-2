@@ -7,6 +7,15 @@ from robotClasses import DiffDriveRobot
 import detection, multiprocessing, time
 
 def update_ball_center(center, radius): # Takes approximately 0.2s to process one frame
+    """Function (or process) that updates the center of the ball and its radius in the camera frame.
+
+    Args:
+        center (int): The center of the ball in the frame (340 is exactly center, >340 is to the right of the frame, <340 is the left)
+        radius (int): The radius of the largest ball in pixels.
+
+    Returns:
+        None
+    """
     print("Ball detection process initiated...\n\n\n")
     detector = detection.TennisBallDetector()
     while True:
@@ -52,6 +61,17 @@ def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=6e-4, 
     return w_desired, sum_error
 
 def milestone1_process(v_desired, w_desired, center, radius):
+    """The main process used to control the logic of the robot (e.g. when to align with the ball, setting speed, etc.)
+
+    Args:
+        v_desired (float): Velocity of the robot (m/s). Positive is moving forwards.
+        w_desired (float): Angular velocity of the robot (rad/s). Positive is moving counter clockwise (left).
+        center (int): The position of the ball's center in the camera frame. Left of frame is center=0.
+        radius (int): Radius of the largest ball in pixels.
+
+    Returns:
+        None
+    """
     print("Milestone 1 process initiated...\n\n\n")
     '''Stage 1: go to center'''
     
