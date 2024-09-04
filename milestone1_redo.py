@@ -4,7 +4,7 @@ This is a redo of the Milestone 1 task of the tennis robot
 """
 
 from robotClasses import DiffDriveRobot
-import detection
+import detection, multiprocessing
 
 def update_ball_center(center, radius):
     detector = detection.TennisBallDetector()
