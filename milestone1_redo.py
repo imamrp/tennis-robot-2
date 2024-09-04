@@ -48,7 +48,6 @@ def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=1e-3, 
     w_desired = Kp*error
     
     sum_error += error
-    print(w_desired)
     return w_desired, sum_error
 
 def milestone1_process(v_desired, w_desired, center, radius):
@@ -68,6 +67,7 @@ def milestone1_process(v_desired, w_desired, center, radius):
 
         if center.value != -1:
             print(f"Target w: {w_desired.value}, Center: {center.value}, Radius: {radius.value}")
+            time.sleep(0.01)
 
     # Stop at the ball
     v_desired.value = 0
