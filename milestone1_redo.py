@@ -4,11 +4,12 @@ This is a redo of the Milestone 1 task of the tennis robot
 """
 
 from robotClasses import DiffDriveRobot
-import detection, multiprocessing
+import detection, multiprocessing, time
 
 def update_ball_center(center, radius):
     detector = detection.TennisBallDetector()
     while True:
+        start_time = time.time()
         _, frame = detector.cap.read()
         detected_balls = detector.process_frame(frame)
         detected_center = detector.get_circle_1_center(detected_balls)
@@ -16,7 +17,7 @@ def update_ball_center(center, radius):
         if detected_center:
             center.value = detected_center[0]
             radius.value = detected_radius
-            print(f"X: {center.value} R: {radius.value}")
+            print(f"X: {center.value} R: {radius.value} Time: {time.time()-start_time}")
             
         else:
             center.value = -1
