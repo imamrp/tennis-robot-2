@@ -61,7 +61,7 @@ def milestone1_process(v_desired, w_desired, center, radius):
     
     '''Stage 3: Ball alignment and move towards the ball'''
     alignment_error_sum = 0
-    while center.value < 130:
+    while radius.value < 130:
         v_desired.value = 0 # Set slow forward speed
         # Get the desired rotational velocity
         w_desired.value, alignment_error_sum = allign_to_ball(ball_center=center.value, sum_error=alignment_error_sum, desired_center=340, Kp=0.1, Ki=0.01)
