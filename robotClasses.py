@@ -191,7 +191,7 @@ class DiffDriveRobot:
 
         Args:
             v_desired (float): The desired velocity (m/s) of the robot. Positive means driving forward
-            w_desired (float): The desired rotational velocity (rad/s) of the robot. Positive means clockwise turning.
+            w_desired (float): The desired rotational velocity (rad/s) of the robot. Positive means counter clockwise turning (left turning).
 
         Returns:
             Tuple(float,float,float,float): The left and right PWM duty cycles, left motor desired and measured speed, right motor desired and measured speed. 
