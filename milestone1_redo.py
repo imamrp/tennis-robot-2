@@ -45,7 +45,7 @@ def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=0, Ki=
     error = desired_center - ball_center
     
     # PI controller for the desired w (limited to +/-1 rad/s)
-    w_desired = min(max(-0.5,Kp*error + Ki*sum_error),0.5)
+    w_desired = 0
     
     sum_error += error
     
