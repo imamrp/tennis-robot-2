@@ -7,6 +7,7 @@ from robotClasses import DiffDriveRobot
 import detection, multiprocessing, time
 
 def update_ball_center(center, radius): # Takes approximately 0.2s to process one frame
+    print("Ball detection process initiated...\n\n\n")
     detector = detection.TennisBallDetector()
     while True:
         _, frame = detector.cap.read()
@@ -16,13 +17,11 @@ def update_ball_center(center, radius): # Takes approximately 0.2s to process on
         if detected_center:
             center.value = detected_center[0]
             radius.value = detected_radius
-            print(f"X: {center.value} R: {radius.value}")
-            
         else:
             center.value = -1
             radius.value = -1
-            print("Ball not seen")
-
+        # print(f"X: {center.value} R: {radius.value}")
+            
 def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=0.1, Ki=0.01):
     """Function will return a forward velocity and the angular velocity needed to go towards a ball.
     To determine the angular velocity, this function uses a PI controller.
@@ -37,6 +36,10 @@ def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=0.1, K
     Returns:
         Tuple(float,float): The desired forward velocity and the desired angular velocity 
     """
+    # If ball out of frame
+    if (ball_center==-1):
+        w_desired = 0
+        return w_desired, sum_error
     
     # Find error
     error = desired_center - ball_center
@@ -49,6 +52,7 @@ def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=0.1, K
     return w_desired, sum_error
 
 def milestone1_process(v_desired, w_desired, center, radius):
+    print("Milestone 1 process initiated...\n\n\n")
     '''Stage 1: go to center'''
     
     
@@ -61,6 +65,8 @@ def milestone1_process(v_desired, w_desired, center, radius):
         v_desired.value = 0 # Set slow forward speed
         # Get the desired rotational velocity
         w_desired.value, alignment_error_sum = allign_to_ball(ball_center=center.value, sum_error=alignment_error_sum, desired_center=340, Kp=0.1, Ki=0.01)
+
+        print(f"Target w: {w_desired.value}, Center: {center.value}, Radius: {radius.value}")
 
     # Stop at the ball
     v_desired.value = 0
@@ -81,7 +87,7 @@ def robot_control_process(v_desired,w_desired):
         v_desired (float): The desired speed of the robot
     """
     robot = DiffDriveRobot()
-    
+    print("Robot motor control process initiated...\n\n\n")
     while True:
         duty_cycle_L, duty_cycle_R, wL_desired, wL_measured, wR_desired, wR_measured = robot.drive(v_desired=v_desired.value, w_desired=w_desired.value)        
 
