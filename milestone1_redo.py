@@ -97,16 +97,19 @@ if __name__ == "__main__":
     radius = multiprocessing.Value('i', -1)
     center_process = multiprocessing.Process(target=update_ball_center, args=(center, radius))
     center_process.start()
-    center_process.join()
 
     '''Start process for motor control'''
     v_desired = multiprocessing.Value('f', 0)
     w_desired = multiprocessing.Value('f', 0)
     motor_ctrl_process = multiprocessing.Process(target=robot_control_process, args=(v_desired, w_desired))
     motor_ctrl_process.start()
-    motor_ctrl_process.join()
+
 
     '''Main process'''
     main_process = multiprocessing.Process(target=milestone1_process, args=(v_desired, w_desired, center, radius))
     main_process.start()
+
+    '''Join processes'''
+    motor_ctrl_process.join()
+    center_process.join()
     main_process.join()
