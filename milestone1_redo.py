@@ -77,4 +77,9 @@ def robot_control_process(v_desired,w_desired):
 
 
 if __name__ == "__main__":
-    update_ball_center(center, radius)
+    '''Start the update_ball_center process'''
+    center = multiprocessing.Value('i', -1)
+    radius = multiprocessing.Value('i', -1)
+    center_process = multiprocessing.Process(target=update_ball_center, args=(center,radius,))
+    center_process.start()
+    center_process.join()
