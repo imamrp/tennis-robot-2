@@ -60,7 +60,25 @@ def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=6e-4, 
     sum_error += error
     return w_desired, sum_error
 
-def milestone1_process(v_desired, w_desired, center, radius):
+def rotate_robot(w_desired, robot_theta, angle_to_turn, Kp = 6e-3):
+    '''
+    Rotates the robot angle_to_turn radians on the spot from it's current position
+
+    Args:
+        w_desired (float): Angular velocity of the robot (rad/s). Positive is moving counter clockwise (left).
+        theta (float): Current angle of robot
+        angle_to_turn (float): Angle for the robot to turn in radians
+        Kp (float): The proportional gain.
+    '''
+    start_theta = robot_theta
+    error = angle_to_turn
+    while error > 0.01:
+        angle_turned = (robot_theta - start_theta) 
+        error = angle_to_turn - angle_turned
+        w_desired = Kp*error
+    
+
+def milestone1_process(v_desired, w_desired, center, radius, theta):
     """The main process used to control the logic of the robot (e.g. when to align with the ball, setting speed, etc.)
 
     Args:
@@ -68,12 +86,15 @@ def milestone1_process(v_desired, w_desired, center, radius):
         w_desired (float): Angular velocity of the robot (rad/s). Positive is moving counter clockwise (left).
         center (int): The position of the ball's center in the camera frame. Left of frame is center=0.
         radius (int): Radius of the largest ball in pixels.
+        theta (float): Current angle of robot
 
     Returns:
         None
     """
     print("Milestone 1 process initiated...\n\n\n")
     '''Stage 1: go to center'''
+    # rotating 90 degrees left test
+    rotate_robot(w_desired = w_desired.value, robot_theta = theta, angle_to_turn = np.pi/2)
     
     
     '''Stage 2: rotate in place and see a ball'''
@@ -102,7 +123,7 @@ def milestone1_process(v_desired, w_desired, center, radius):
     
     quit()
 
-def robot_control_process(v_desired,w_desired):
+def robot_control_process(v_desired,w_desired, theta):
     """The process that controls the robot's motors continuously and repeatedly.
 
     Args:
@@ -111,7 +132,8 @@ def robot_control_process(v_desired,w_desired):
     robot = DiffDriveRobot()
     print("Robot motor control process initiated...\n\n\n")
     while True:
-        duty_cycle_L, duty_cycle_R, wL_desired, wL_measured, wR_desired, wR_measured = robot.drive(v_desired=v_desired.value, w_desired=w_desired.value)        
+        duty_cycle_L, duty_cycle_R, wL_desired, wL_measured, wR_desired, wR_measured = robot.drive(v_desired=v_desired.value, w_desired=w_desired.value) 
+        theta.value = robot.th
 
 if __name__ == "__main__":
     '''Start the update_ball_center process'''
@@ -123,12 +145,13 @@ if __name__ == "__main__":
     '''Start process for motor control'''
     v_desired = multiprocessing.Value('f', 0)
     w_desired = multiprocessing.Value('f', 0)
-    motor_ctrl_process = multiprocessing.Process(target=robot_control_process, args=(v_desired, w_desired))
+    theta = multiprocessing.Value('f', 0)
+    motor_ctrl_process = multiprocessing.Process(target=robot_control_process, args=(v_desired, w_desired, theta))
     motor_ctrl_process.start()
 
 
     '''Main process'''
-    main_process = multiprocessing.Process(target=milestone1_process, args=(v_desired, w_desired, center, radius))
+    main_process = multiprocessing.Process(target=milestone1_process, args=(v_desired, w_desired, center, radius, theta))
     main_process.start()
 
     '''Join processes'''
