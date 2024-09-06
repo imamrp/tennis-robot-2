@@ -70,15 +70,72 @@ def rotate_robot(w_desired, robot_theta, angle_to_turn, Kp = 6e-3):
         angle_to_turn (float): Angle for the robot to turn in radians
         Kp (float): The proportional gain.
     '''
+    # using start angle as reference
     start_theta = robot_theta
     error = angle_to_turn
     while error > 0.01:
+        # finding the angle turned and comparing to input
         angle_turned = (robot_theta - start_theta) 
         error = angle_to_turn - angle_turned
         w_desired = Kp*error
+
+def move_forward(v_deisred, robot_x, robot_y, dist, Kp = 6e-3):
+    '''
+    Moves the robot forward dist meters from it's current position
+
+    Args:
+        v_desired (float): Linear velocity of the robot (m/s).
+        robot_x (float): Current x-coordinate of robot
+        robot_y (float): Current y-coordinate of robot
+        dist (float): Distance for the robot to move in meters
+        Kp (float): The proportional gain.
+    '''
+    # getting original coodinates as reference
+    start_x = robot_x
+    start_y = robot_x
+    error = dist
+    while error > 0.01:        # runs until 1cm of target
+        # finding the distance travelled and comparing to input
+        x_travelled = robot_x - start_x
+        y_travelled = robot_y - start_y
+        distance_travelled = (x_travelled**2 + y_travelled**2) ** 0.5
+        error = dist - distance_travelled
+        v_desired = Kp*error
+
+def return_to_start(v_desired, w_desired, rotbot_x, robot_y, theta):
+    '''
+    Moves the robot back to it's starting position from anywhere on the court
+
+    Args:
+        v_desired (float): Linear velocity of the robot (m/s).
+        w_desired (float): Angular velocity of the robot (rad/s). Positive is moving counter clockwise (left).
+        robot_x (float): Current x-coordinate of robot
+        robot_y (float): Current y-coordinate of robot
+        theta (float): Current angle of robot
+    '''
+    # finding the angle the robot needs to turn to face the start
+    current_th = theta
+    # clipping theta to [-pi,pi]
+    current_th = (current_th + np.pi) % (2*np.pi) - np.pi
+    angle = np.arctan2(robot_y, robot_x)
+    angle_to_turn = np.pi - current_th + angle
+    # clipping angle to turn to [-pi,pi]
+    angle_to_turn = (angle_to_turn + np.pi) % (2*np.pi) - np.pi
+
+    # finding the distance the robot has to move to get to origin
+    dist = (robot_x**2 + robot_y**2) ** 0.5
+
+    # turning the robot
+    rotate_robot(w_desired, robot_theta, angle_to_turn)
+    w_desired = 0
+
+    # moving robot forward
+    move_forward(v_deisred, robot_x, robot_y, dist)
+    v_desired = 0
+
     
 
-def milestone1_process(v_desired, w_desired, center, radius, theta):
+def milestone1_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, theta):
     """The main process used to control the logic of the robot (e.g. when to align with the ball, setting speed, etc.)
 
     Args:
@@ -94,7 +151,15 @@ def milestone1_process(v_desired, w_desired, center, radius, theta):
     print("Milestone 1 process initiated...\n\n\n")
     '''Stage 1: go to center'''
     # rotating 90 degrees left test
-    rotate_robot(w_desired = w_desired.value, robot_theta = theta, angle_to_turn = np.pi/2)
+    rotate_robot(w_desired = w_desired.value, robot_theta = theta.value, angle_to_turn = np.pi/2)
+    w_desired.value = 0
+
+    # moving 1 meter forward
+    move_forward(v_deisred = v_desired.value, robot_x, = robot_x.value robot_y = robot_y.value, dist = 1)
+    v_desired.value = 0
+
+    # returning back to origin
+    return_to_start(v_desired = v_desired.value, w_desired = w_desired.value, robot_x = robot_x.value, robot_y = robot_y.value, theta = theta.value)
     
     
     '''Stage 2: rotate in place and see a ball'''
@@ -123,16 +188,23 @@ def milestone1_process(v_desired, w_desired, center, radius, theta):
     
     quit()
 
-def robot_control_process(v_desired,w_desired, theta):
+def robot_control_process(v_desired,w_desired, rotbot_x, robot_y, theta):
     """The process that controls the robot's motors continuously and repeatedly.
 
     Args:
         v_desired (float): The desired speed of the robot
+        w_desired (float): Angular velocity of the robot (rad/s). Positive is moving counter clockwise (left).
+        robot_x (float): Current x-coordinate of robot
+        robot_y (float): Current y-coordinate of robot
+        theta (float): Current angle of robot in radians
     """
     robot = DiffDriveRobot()
     print("Robot motor control process initiated...\n\n\n")
     while True:
         duty_cycle_L, duty_cycle_R, wL_desired, wL_measured, wR_desired, wR_measured = robot.drive(v_desired=v_desired.value, w_desired=w_desired.value) 
+        # getting current state of robot
+        robot_x.value = robot.x
+        robot_y.value = robot.y
         theta.value = robot.th
 
 if __name__ == "__main__":
@@ -146,12 +218,12 @@ if __name__ == "__main__":
     v_desired = multiprocessing.Value('f', 0)
     w_desired = multiprocessing.Value('f', 0)
     theta = multiprocessing.Value('f', 0)
-    motor_ctrl_process = multiprocessing.Process(target=robot_control_process, args=(v_desired, w_desired, theta))
+    motor_ctrl_process = multiprocessing.Process(target=robot_control_process, args=(v_desired, w_desired, rotbot_x, robot_y, theta))
     motor_ctrl_process.start()
 
 
     '''Main process'''
-    main_process = multiprocessing.Process(target=milestone1_process, args=(v_desired, w_desired, center, radius, theta))
+    main_process = multiprocessing.Process(target=milestone1_process, args=(v_desired, w_desired, center, radius, rotbot_x, robot_y, theta))
     main_process.start()
 
     '''Join processes'''
