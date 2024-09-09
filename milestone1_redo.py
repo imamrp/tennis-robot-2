@@ -169,7 +169,7 @@ def milestone1_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     print('moving forward')
     # move_forward(v_deisred = v_desired.value, robot_x = robot_x.value, robot_y = robot_y.value, dist = 1)
     v_desired.value = 0.1
-    time.sleep(5.0)
+    time.sleep(10.0)
     v_desired.value = 0
     
     # returning back to origin
