@@ -151,11 +151,11 @@ def milestone1_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     '''Stage 1: go to center'''
     # rotating 90 degrees left test
     angle_to_turn = np.pi/2
-    start_theta = theta
+    start_theta = theta.value
     error = angle_to_turn
     print('rotating robot')
     while error > 0.01:
-        error, w_desired = rotate_robot(start_theta = start_theta, robot_theta = theta, angle_to_turn = angle_to_turn, Kp = 6e-2)
+        error, w_desired = rotate_robot(start_theta = start_theta, robot_theta = theta.value, angle_to_turn = angle_to_turn, Kp = 6e-2)
         print('w_desired: ', w_desired)
 
     # rotate_robot(w_desired = w_desired.value, robot_theta = theta.value, angle_to_turn = np.pi/2)
