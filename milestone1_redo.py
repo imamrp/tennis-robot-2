@@ -150,14 +150,16 @@ def milestone1_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     print("Milestone 1 process initiated...\n\n\n")
     '''Stage 1: go to center'''
     # rotating 90 degrees left test
-    angle_to_turn = np.pi/2
-    start_theta = theta.value
-    error = angle_to_turn
-    print('rotating robot')
-    while abs(error) > 0.02:
-        error, w_desired.value = rotate_robot(start_theta = start_theta, robot_theta = theta.value, angle_to_turn = angle_to_turn)
-        print('w_desired: ', w_desired)
-        print('theta: ', theta.value)
+    # angle_to_turn = np.pi/2
+    # start_theta = theta.value
+    # error = angle_to_turn
+    # print('rotating robot')
+    # while abs(error) > 0.02:
+    #     error, w_desired.value = rotate_robot(start_theta = start_theta, robot_theta = theta.value, angle_to_turn = angle_to_turn)
+    #     print('w_desired: ', w_desired)
+    #     print('theta: ', theta.value)
+    w_desired.value = 0.262
+    time.sleep(3.0)
     w_desired.value = 0
 
     # rotate_robot(w_desired = w_desired.value, robot_theta = theta.value, angle_to_turn = np.pi/2)
