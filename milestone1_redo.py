@@ -159,7 +159,7 @@ def milestone1_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     #     print('w_desired: ', w_desired)
     #     print('theta: ', theta.value)
     w_desired.value = 0.262
-    time.sleep(3.0)
+    time.sleep(6.0)
     w_desired.value = 0
 
     # rotate_robot(w_desired = w_desired.value, robot_theta = theta.value, angle_to_turn = np.pi/2)
