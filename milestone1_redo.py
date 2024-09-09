@@ -61,7 +61,7 @@ def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=6e-4, 
     sum_error += error
     return w_desired, sum_error
 
-def rotate_robot(start_theta, robot_theta, angle_to_turn, Kp = 6e-2):
+def rotate_robot(start_theta, robot_theta, angle_to_turn, Kp = 6e-1):
     '''
     Rotates the robot angle_to_turn radians on the spot from it's current position
 
