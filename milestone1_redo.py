@@ -218,6 +218,8 @@ if __name__ == "__main__":
     v_desired = multiprocessing.Value('f', 0)
     w_desired = multiprocessing.Value('f', 0)
     theta = multiprocessing.Value('f', 0)
+    robot_x = multiprocessing.Value('f', 0)
+    robot_y = multiprocessing.Value('f', 0)
     motor_ctrl_process = multiprocessing.Process(target=robot_control_process, args=(v_desired, w_desired, robot_x, robot_y, theta))
     motor_ctrl_process.start()
 
