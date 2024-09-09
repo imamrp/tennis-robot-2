@@ -5,6 +5,7 @@ This is a redo of the Milestone 1 task of the tennis robot
 
 from robotClasses import DiffDriveRobot
 import detection, multiprocessing, time
+import numpy as np
 
 def update_ball_center(center, radius): # Takes approximately 0.2s to process one frame
     """Function (or process) that updates the center of the ball and its radius in the camera frame.
