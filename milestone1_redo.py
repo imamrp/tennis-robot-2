@@ -163,6 +163,7 @@ def milestone1_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     # w_desired.value = 0
 
     # moving 1 meter forward
+    print('moving forward')
     move_forward(v_deisred = v_desired.value, robot_x = robot_x.value, robot_y = robot_y.value, dist = 1)
     v_desired.value = 0
 
