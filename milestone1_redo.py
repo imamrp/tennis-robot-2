@@ -218,12 +218,12 @@ if __name__ == "__main__":
     v_desired = multiprocessing.Value('f', 0)
     w_desired = multiprocessing.Value('f', 0)
     theta = multiprocessing.Value('f', 0)
-    motor_ctrl_process = multiprocessing.Process(target=robot_control_process, args=(v_desired, w_desired, rotbot_x, robot_y, theta))
+    motor_ctrl_process = multiprocessing.Process(target=robot_control_process, args=(v_desired, w_desired, robot_x, robot_y, theta))
     motor_ctrl_process.start()
 
 
     '''Main process'''
-    main_process = multiprocessing.Process(target=milestone1_process, args=(v_desired, w_desired, center, radius, rotbot_x, robot_y, theta))
+    main_process = multiprocessing.Process(target=milestone1_process, args=(v_desired, w_desired, center, radius, robot_x, robot_y, theta))
     main_process.start()
 
     '''Join processes'''
