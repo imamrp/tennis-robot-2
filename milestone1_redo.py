@@ -61,7 +61,7 @@ def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=6e-4, 
     sum_error += error
     return w_desired, sum_error
 
-def rotate_robot(w_desired, robot_theta, angle_to_turn, Kp = 6e-2):
+def rotate_robot(start_theta, robot_theta, angle_to_turn, Kp = 6e-2):
     '''
     Rotates the robot angle_to_turn radians on the spot from it's current position
 
@@ -71,16 +71,12 @@ def rotate_robot(w_desired, robot_theta, angle_to_turn, Kp = 6e-2):
         angle_to_turn (float): Angle for the robot to turn in radians
         Kp (float): The proportional gain.
     '''
-    # using start angle as reference
-    start_theta = robot_theta
-    error = angle_to_turn
-    print('rotating robot')
-    while error > 0.01:
-        # finding the angle turned and comparing to input
-        print('w_desired: ', w_desired)
-        angle_turned = (robot_theta - start_theta) 
-        error = angle_to_turn - angle_turned
-        w_desired = Kp*error
+    # finding the angle turned and comparing to input
+    angle_turned = (robot_theta - start_theta) 
+    error = angle_to_turn - angle_turned
+    w_desired = Kp*error
+
+    return error, w_desired
 
 def move_forward(v_deisred, robot_x, robot_y, dist, Kp = 6e-2):
     '''
@@ -154,8 +150,16 @@ def milestone1_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     print("Milestone 1 process initiated...\n\n\n")
     '''Stage 1: go to center'''
     # rotating 90 degrees left test
-    rotate_robot(w_desired = w_desired.value, robot_theta = theta.value, angle_to_turn = np.pi/2)
-    w_desired.value = 0
+    angle_to_turn = np.pi/2
+    start_theta = theta
+    error = angle_to_turn
+    print('rotating robot')
+    while error > 0.01:
+        error, w_desired = rotate_robot(start_theta = start_theta, robot_theta = theta, angle_to_turn = angle_to_turn, Kp = 6e-2)
+        print('w_desired: ', w_desired)
+
+    # rotate_robot(w_desired = w_desired.value, robot_theta = theta.value, angle_to_turn = np.pi/2)
+    # w_desired.value = 0
 
     # moving 1 meter forward
     move_forward(v_deisred = v_desired.value, robot_x = robot_x.value, robot_y = robot_y.value, dist = 1)
