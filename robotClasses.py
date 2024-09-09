@@ -215,6 +215,7 @@ class DiffDriveRobot:
                                                                                                         prev_cycle_L= self.duty_cycle_L, 
                                                                                                         prev_cycle_R= self.duty_cycle_R)
         
+        print(f"Left sum error: {self.error_sum_L}, Right sum error: {self.error_sum_R}")
         # Send PWM to wheels
         self.rotate_motor(dutyCycle=self.duty_cycle_L, motor="l")
         self.rotate_motor(dutyCycle=self.duty_cycle_R, motor="r")
