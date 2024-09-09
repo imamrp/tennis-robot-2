@@ -150,7 +150,7 @@ class DiffDriveRobot:
         
         self.x = self.x + self.dt*v*np.cos(self.th)
         self.y = self.y + self.dt*v*np.sin(self.th)
-        self.th = self.th + w*self.dt
+        self.th = self.th - w*self.dt
         
         return self.x, self.y, self.th
 
