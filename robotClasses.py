@@ -173,12 +173,16 @@ class DiffDriveRobot:
             Tuple(int,int,float,float): Duty cycle of the left motor, duty cycle of the right motor, New accumulative sum of the error in left motor, and new accumulative sum of the error in right motor
         """
         # PI Controller: finding change in duty cycle needed to get to reference speed 
-        delta_duty_cycle_L = self.Kp*(wL_desired-wL_measured) + self.Ki*error_sum_L*self.dt
-        delta_duty_cycle_R = self.Kp*(wR_desired-wR_measured) + self.Ki*error_sum_R*self.dt
+        if (wL_desired == 0 and wR_desired == 0): # for stopping
+            duty_cycle_L = 0
+            duty_cycle_R = 0
+        else:
+            delta_duty_cycle_L = self.Kp*(wL_desired-wL_measured) + self.Ki*error_sum_L*self.dt
+            delta_duty_cycle_R = self.Kp*(wR_desired-wR_measured) + self.Ki*error_sum_R*self.dt
         
-        # Getting new duty cycle
-        duty_cycle_L = min(max(-100,prev_cycle_L + delta_duty_cycle_L),100)
-        duty_cycle_R = min(max(-100,prev_cycle_R + delta_duty_cycle_R),100)
+            # Getting new duty cycle
+            duty_cycle_L = min(max(-100,prev_cycle_L + delta_duty_cycle_L),100)
+            duty_cycle_R = min(max(-100,prev_cycle_R + delta_duty_cycle_R),100)
         
         # Error accumulation
         error_sum_L = error_sum_L + (wL_desired-wL_measured)
