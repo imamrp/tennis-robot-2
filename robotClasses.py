@@ -76,12 +76,16 @@ class DiffDriveRobot:
         Returns:
             Tuple(Float,Float): The left and right angular veloctiy in rad/s respectively
         """
-        # Reset encoder count
-        self.encoderL.steps = 0
-        self.encoderR.steps = 0
+        # Setting encoder reference
+        encoderL_start = self.encoderL.steps 
+        encoderR_start = self.encoderR.steps 
 
         time.sleep(self.dt)
 
+        # delta encoder values
+        delta_encoderL = self.encoderL.steps - encoderL_start
+        delta_encoderR = self.encoderR.steps - encoderR_start
+        
         # Counts per second
         countsPerSecondR = -self.encoderR.steps/self.dt
         countsPerSecondL = -self.encoderL.steps/self.dt
@@ -149,11 +153,26 @@ class DiffDriveRobot:
         Returns:
             Tuple(float,float,float): x,y,th
         """       
-        v, w = self.get_base_velocity(self.wL,self.wR)
-        
-        self.x = self.x + self.dt*v*np.cos(self.th)
-        self.y = self.y + self.dt*v*np.sin(self.th)
-        self.th = self.th - w*self.dt
+        # v, w = self.get_base_velocity(self.wL,self.wR)
+
+        # updating movement estimating it as a turn then straight
+        encoder_difference = self.encoderL.steps - self.encoderR.steps
+
+        straight_movements = min(self.encoderR.steps, self.encoderL.steps) + encoder_difference / 2
+
+        # rotation
+        delta_th = (((encoder_difference / 900) * self.r * 2) / np.pi * self.l) * 2*np.pi
+
+        # first straight movement
+        # getting distance travelled
+        dist_1 = 2 * self.r * np.pi * -straight_movements / 900 
+
+        # updating theta first
+        self.th = self.th + delta_th
+
+        # updating x and y with updated theta
+        self.x = self.x + dist_1 * np.cos(self.th)
+        self.y = self.y + dist_1 * np.sin(self.th)
         
         return self.x, self.y, self.th
 
