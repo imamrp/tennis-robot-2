@@ -14,7 +14,7 @@ import gpiozero
 class DiffDriveRobot:
     """DiffDriveRobot class initiates the robot and its drive control. This class is to be called in a rapidly repeating process aside from the main process so that the motor can be continuously controlled. 
     """
-    def __init__(self, dt=0.2, Kp=2, Ki=0.4, wheel_radius=0.027, wheel_sep=0.22):
+    def __init__(self, dt=0.1, Kp=2, Ki=0, Kd=0, wheel_radius=0.027, wheel_sep=0.22):
         self.x = 0.0 # y-position (m)
         self.y = 0.0 # y-position (m)
         self.th = 0.0 # orientation (rad)
@@ -61,7 +61,10 @@ class DiffDriveRobot:
         # Controller parameters
         self.Kp = Kp
         self.Ki = Ki
-        self.error_sum_L = 0 # Error of desired 
+        self.Kd = Kd
+        self.error_prev_L = 0 # Previous error
+        self.error_prev_R = 0
+        self.error_sum_L = 0 # Error accumulation
         self.error_sum_R = 0
         self.duty_cycle_L = 0 
         self.duty_cycle_R = 0
@@ -156,7 +159,7 @@ class DiffDriveRobot:
 
     # Motor control and driving
     # TODO: implement with multiprocess
-    def motor_controller(self, wL_desired:float, wL_measured:float, wR_desired:float, wR_measured:float, error_sum_L:float, error_sum_R:float, prev_cycle_L:int, prev_cycle_R:int):
+    def motor_controller(self, wL_desired:float, wL_measured:float, wR_desired:float, wR_measured:float, error_prev_L:float, error_prev_R:float, error_sum_L:float, error_sum_R:float, prev_cycle_L:int, prev_cycle_R:int):
         """Controller for both left and right motors implementing a PI controller
 
         Args:
@@ -164,6 +167,8 @@ class DiffDriveRobot:
             wL_measured (float): Measured angular velocity (rad/s) of the left motor
             wR_desired (float): Desired angular velocity (rad/s) of the right motor
             wR_measured (float): Measured angular velocity (rad/s) of the right motor
+            error_prev_L (float): Previous error in left motor
+            error_prev_R (float): Previous error in right motor
             error_sum_L (float): Accumulative sum of the error in left motor
             error_sum_R (float): Accumulative sum of the error in right motor
             prev_cycle_L (int): The previous duty cycle of the left motor from 0-100
@@ -177,18 +182,22 @@ class DiffDriveRobot:
             duty_cycle_L = 0
             duty_cycle_R = 0
         else:
-            delta_duty_cycle_L = self.Kp*(wL_desired-wL_measured) + self.Ki*error_sum_L*self.dt
-            delta_duty_cycle_R = self.Kp*(wR_desired-wR_measured) + self.Ki*error_sum_R*self.dt
+            delta_duty_cycle_L = self.Kp*(wL_desired-wL_measured) + self.Ki*error_sum_L*self.dt + self.Kd*error_prev_L/self.dt
+            delta_duty_cycle_R = self.Kp*(wR_desired-wR_measured) + self.Ki*error_sum_R*self.dt + self.Kd*error_prev_R/self.dt
         
             # Getting new duty cycle
             duty_cycle_L = min(max(-100,prev_cycle_L + delta_duty_cycle_L),100)
             duty_cycle_R = min(max(-100,prev_cycle_R + delta_duty_cycle_R),100)
+
+        # Error previous
+        error_prev_L = wL_desired-wL_measured
+        error_prev_R = wR_desired-wR_measured
         
         # Error accumulation
         error_sum_L = error_sum_L + (wL_desired-wL_measured)
         error_sum_R = error_sum_R + (wR_desired-wR_measured)
         
-        return duty_cycle_L, duty_cycle_R, error_sum_L, error_sum_R
+        return duty_cycle_L, duty_cycle_R, error_prev_L, error_prev_R, error_sum_L, error_sum_R
     
     def drive(self,v_desired:float,w_desired:float):
         """Drives the robot for a desired velcotiy v (m/s) and desired rotational velocity w (rad/s) by using a PI controller and the measured velocity.
@@ -209,15 +218,17 @@ class DiffDriveRobot:
         self.wL = (wL_measured + self.wL)/2 # averaging out
         self.wR = (wR_measured + self.wR)/2 # averaging out
         
-        # Use PI controller
-        self.duty_cycle_L, self.duty_cycle_R, self.error_sum_L, self.error_sum_R = self.motor_controller(wL_desired = wL_desired, 
-                                                                                                        wL_measured = self.wL,
-                                                                                                        wR_desired = wR_desired, 
-                                                                                                        wR_measured = self.wR, 
-                                                                                                        error_sum_L = self.error_sum_L, 
-                                                                                                        error_sum_R = self.error_sum_R, 
-                                                                                                        prev_cycle_L= self.duty_cycle_L, 
-                                                                                                        prev_cycle_R= self.duty_cycle_R)
+        # Use PID controller
+        self.duty_cycle_L, self.duty_cycle_R, self.error_prev_L, self.error_prev_R, self.error_sum_L, self.error_sum_R = self.motor_controller(wL_desired = wL_desired, 
+                                                                                                                                                wL_measured = self.wL,
+                                                                                                                                                wR_desired = wR_desired, 
+                                                                                                                                                wR_measured = self.wR, 
+                                                                                                                                                error_prev_L = self.error_prev_L
+                                                                                                                                                error_prev_R = self.error_prev_R
+                                                                                                                                                error_sum_L = self.error_sum_L, 
+                                                                                                                                                error_sum_R = self.error_sum_R, 
+                                                                                                                                                prev_cycle_L= self.duty_cycle_L, 
+                                                                                                                                                prev_cycle_R= self.duty_cycle_R)
         
         print(f"x: {self.x}, y: {self.y}, th: {self.th}")
         # Send PWM to wheels
@@ -238,16 +249,16 @@ def set_speed_process(v_desired,w_desired):
         v_desired (float): The desired speed of the robot
     """
     while True:
-        if bool(random.getrandbits(1)):
-            v_desired.value = float(random.choice([-0.2,-0.1,0,0.1,0.2]))
-            w_desired.value = float(0)
-            print(f"\n\n\n\nNew Speed: v={v_desired.value}; w={w_desired.value}")
-            time.sleep(5)
-        else:
-            w_desired.value = float(random.choice([-0.5,0,0.5]))
-            v_desired.value = float(0)
-            print(f"\n\n\n\nNew Speed: v={v_desired.value}; w={w_desired.value}")
-            time.sleep(5)
+        # if bool(random.getrandbits(1)):
+        v_desired.value = float(random.choice([-0.1,0,0.1]))
+        w_desired.value = float(0)
+        print(f"\n\n\n\nNew Speed: v={v_desired.value}; w={w_desired.value}")
+        time.sleep(5)
+        # else:
+        #     w_desired.value = float(random.choice([-0.5,0,0.5]))
+        #     v_desired.value = float(0)
+        #     print(f"\n\n\n\nNew Speed: v={v_desired.value}; w={w_desired.value}")
+        #     time.sleep(5)
         
 def robot_control_process(v_desired,w_desired):
     """The process that controls the robot's motors continuously and repeatedly.
