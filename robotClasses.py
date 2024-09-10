@@ -219,7 +219,7 @@ class DiffDriveRobot:
                                                                                                         prev_cycle_L= self.duty_cycle_L, 
                                                                                                         prev_cycle_R= self.duty_cycle_R)
         
-        print(f"Left duty_cycle: {self.duty_cycle_L}, Right duty cycle: {self.duty_cycle_R}")
+        print(f"x: {self.x}, y: {self.y}, th: {self.th}")
         # Send PWM to wheels
         self.rotate_motor(dutyCycle=self.duty_cycle_L, motor="l")
         self.rotate_motor(dutyCycle=self.duty_cycle_R, motor="r")
