@@ -223,8 +223,8 @@ class DiffDriveRobot:
                                                                                                                                                 wL_measured = self.wL,
                                                                                                                                                 wR_desired = wR_desired, 
                                                                                                                                                 wR_measured = self.wR, 
-                                                                                                                                                error_prev_L = self.error_prev_L
-                                                                                                                                                error_prev_R = self.error_prev_R
+                                                                                                                                                error_prev_L = self.error_prev_L,
+                                                                                                                                                error_prev_R = self.error_prev_R,
                                                                                                                                                 error_sum_L = self.error_sum_L, 
                                                                                                                                                 error_sum_R = self.error_sum_R, 
                                                                                                                                                 prev_cycle_L= self.duty_cycle_L, 
