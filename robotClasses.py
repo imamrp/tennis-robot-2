@@ -173,6 +173,9 @@ class DiffDriveRobot:
         # updating x and y with updated theta
         self.x = self.x + dist_1 * np.cos(self.th)
         self.y = self.y + dist_1 * np.sin(self.th)
+
+        self.encoderL.steps = 0
+        self.encoderR.steps = 0
         
         return self.x, self.y, self.th
 
