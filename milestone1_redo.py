@@ -123,6 +123,7 @@ def move_to_coord(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_de
 
     # finding the distance the robot has to move to get to point
     dist = ((x_desired - robot_x)**2 + (y_desired - robot_y)**2) ** (0.5)
+    print('dist: ', dist, 'angle: ', angle_to_turn)
 
     # turning the robot
     if angle_to_turn > 0:        # left turn
