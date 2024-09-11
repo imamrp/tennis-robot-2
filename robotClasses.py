@@ -167,7 +167,7 @@ class DiffDriveRobot:
 
         # first straight movement
         # getting distance travelled
-        dist_1 = 2 * self.r * np.pi * -straight_movements / 900 
+        dist_1 = 2 * self.r * np.pi * straight_movements / 900 
 
         # updating theta first
         self.th = self.th + delta_th
