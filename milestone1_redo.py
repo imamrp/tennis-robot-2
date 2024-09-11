@@ -120,7 +120,7 @@ def move_to_coord(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_de
     '''
     # clipping theta to [-pi,pi]
     theta_start = (theta.value + np.pi) % (2*np.pi) - np.pi
-    angle = np.arctan2((x_desired - robot_x.value), (y_desired - robot_y.value))
+    angle = np.arctan2((y_desired - robot_y.value), (x_desired - robot_x.value))
     angle_to_turn = angle - theta_start
     # clipping angle to turn to [-pi,pi]
     angle_to_turn = (angle_to_turn + np.pi) % (2*np.pi) - np.pi
@@ -131,7 +131,7 @@ def move_to_coord(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_de
 
     # turning the robot
     rotate_robot(w_desired = w_desired, robot_theta = theta, angle_to_turn = angle_to_turn)
-        
+    print('rotation finished')    
     #calculate turn time
     w_desired.value = 0
     time.sleep(2)
