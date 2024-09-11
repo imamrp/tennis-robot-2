@@ -116,7 +116,7 @@ def move_to_coord(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_de
     '''
     # clipping theta to [-pi,pi]
     theta = (theta + np.pi) % (2*np.pi) - np.pi
-    angle = np.arctan2(((x_desired - robot_x), (y_desired - robot_y))
+    angle = np.arctan2((x_desired - robot_x), (y_desired - robot_y))
     angle_to_turn = angle - theta
     # clipping angle to turn to [-pi,pi]
     angle_to_turn = (angle_to_turn + np.pi) % (2*np.pi) - np.pi
