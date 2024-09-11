@@ -101,36 +101,43 @@ def move_forward(v_deisred, robot_x, robot_y, dist, Kp = 6e-2):
         error = dist - distance_travelled
         v_desired = Kp*error
 
-def return_to_start(v_desired, w_desired, rotbot_x, robot_y, theta):
+def move_to_coord(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_desired):
     '''
-    Moves the robot back to it's starting position from anywhere on the court
+    Moves the robot to any position on the court
 
     Args:
-        v_desired (float): Linear velocity of the robot (m/s).
-        w_desired (float): Angular velocity of the robot (rad/s). Positive is moving counter clockwise (left).
+        x_desired (float): Desired final x coordinate of the robot
+        y_desired (float): Desired final y coordinate of the robot
         robot_x (float): Current x-coordinate of robot
         robot_y (float): Current y-coordinate of robot
         theta (float): Current angle of robot
+        w_desired (multiproc variable): Angular velocity of the robot (rad/s). Positive is moving counter clockwise (left).
+        v_desired (multiproc variable): Linear velocity of the robot (m/s).
     '''
-    # finding the angle the robot needs to turn to face the start
-    current_th = theta
     # clipping theta to [-pi,pi]
-    current_th = (current_th + np.pi) % (2*np.pi) - np.pi
-    angle = np.arctan2(robot_y, robot_x)
-    angle_to_turn = np.pi - current_th + angle
+    theta = (theta + np.pi) % (2*np.pi) - np.pi
+    angle = np.arctan2(((x_desired - robot_x), (y_desired - robot_y))
+    angle_to_turn = angle - theta
     # clipping angle to turn to [-pi,pi]
     angle_to_turn = (angle_to_turn + np.pi) % (2*np.pi) - np.pi
 
-    # finding the distance the robot has to move to get to origin
-    dist = (robot_x**2 + robot_y**2) ** 0.5
+    # finding the distance the robot has to move to get to point
+    dist = ((x_desired - robot_x)**2 + (y_desired - robot_y)**2) ** (0.5)
 
     # turning the robot
-    rotate_robot(w_desired, robot_theta, angle_to_turn)
-    w_desired = 0
+    if angle_to_turn > 0:        # left turn
+        w_desired.value = 0.2
+    else:                        # right turn
+        w_desired.value = -0.2
+        
+    #calculate turn time
+    time.sleep(abs(angle_to_turn/0.2))
+    w_desired.value = 0
 
     # moving robot forward
-    move_forward(v_deisred, robot_x, robot_y, dist)
-    v_desired = 0
+    v_desired.value = 0.1
+    time.sleep(dist/0.1)
+    v_desired.value = 0
 
     
 
@@ -161,8 +168,8 @@ def milestone1_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     w_desired.value = -0.262
     time.sleep(6.0)
     w_desired.value = 0
-    print("Sleep 10 sec")
-    time.sleep(10)
+    print("Sleep 5 sec")
+    time.sleep(5.0)
 
     # rotate_robot(w_desired = w_desired.value, robot_theta = theta.value, angle_to_turn = np.pi/2)
     # w_desired.value = 0
@@ -171,13 +178,14 @@ def milestone1_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     print('moving forward')
     # move_forward(v_deisred = v_desired.value, robot_x = robot_x.value, robot_y = robot_y.value, dist = 1)
     v_desired.value = 0.1
-    time.sleep(10.0)
+    time.sleep(3.0)
     v_desired.value = 0
+    time.sleep(5.0)
     
     # returning back to origin
     print('finished forward movement')
-    return_to_start(v_desired = v_desired.value, w_desired = w_desired.value, robot_x = robot_x.value, robot_y = robot_y.value, theta = theta.value)
-    
+    move_to_coord(x_desired = 0, y_desired = 0, robot_x = robot_x.value, robot_y = robot_y.value, theta = theta.value, w_desired = w_desired, v_desired = v_desired)
+    print('returned to start')
     
     '''Stage 2: rotate in place and see a ball'''
     
