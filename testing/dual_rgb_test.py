@@ -1,4 +1,5 @@
 import time
+import board
 import busio
 import adafruit_tcs34725
 import RPi.GPIO as GPIO
