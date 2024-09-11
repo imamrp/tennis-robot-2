@@ -98,12 +98,13 @@ def move_forward(v_deisred, robot_x, robot_y, dist, Kp = 6e-1):
     start_y = robot_y.value
     error = dist
     while abs(error) > 0.01:        # runs until 1cm of target
+        v_desired.value = Kp*error
         # finding the distance travelled and comparing to input
         x_travelled = robot_x.value - start_x
         y_travelled = robot_y.value - start_y
         distance_travelled = (x_travelled**2 + y_travelled**2) ** 0.5
         error = dist - distance_travelled
-        v_desired = Kp*error
+        
 
 def move_to_coord(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_desired):
     '''
