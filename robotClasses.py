@@ -161,7 +161,7 @@ class DiffDriveRobot:
         straight_movements = min(self.encoderR.steps, self.encoderL.steps) + encoder_difference / 2
 
         # rotation
-        rotation_wheel_dist = (encoder_difference / 900) * self.r * np.pi)        # distance each of the wheels go around the centre of rotaion
+        rotation_wheel_dist = (encoder_difference / 900) * self.r * np.pi        # distance each of the wheels go around the centre of rotaion
         turning_circle = np.pi * self.l
         delta_th = (rotation_wheel_dist / turning_circle) * 2*np.pi
 
