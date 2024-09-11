@@ -61,42 +61,46 @@ def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=6e-4, 
     sum_error += error
     return w_desired, sum_error
 
-def rotate_robot(start_theta, robot_theta, angle_to_turn, Kp = 6e-1):
+def rotate_robot(w_desired, robot_theta, angle_to_turn, Kp = 6e-1):
     '''
     Rotates the robot angle_to_turn radians on the spot from it's current position
 
     Args:
-        w_desired (float): Angular velocity of the robot (rad/s). Positive is moving counter clockwise (left).
-        theta (float): Current angle of robot
+        w_desired (multiproc variable): Angular velocity of the robot (rad/s). Positive is moving counter clockwise (left).
+        robot_theta (multiproc variable): Current angle of robot
         angle_to_turn (float): Angle for the robot to turn in radians
         Kp (float): The proportional gain.
     '''
-    # finding the angle turned and comparing to input
-    angle_turned = (robot_theta - start_theta) 
-    error = angle_to_turn - angle_turned
-    w_desired = Kp*error
+    # finding start theta value as reference
+    start_theta = robot_theta.value
+    error = angle_to_turn
+    while abs(error) > 0.01:
+        w_desired.value = error * Kp
+        angle_turned = robot_theta.value - start_theta
+        error = angle_to_turn - angle_turned
+   
+    
 
-    return error, w_desired
 
 def move_forward(v_deisred, robot_x, robot_y, dist, Kp = 6e-2):
     '''
     Moves the robot forward dist meters from it's current position
 
     Args:
-        v_desired (float): Linear velocity of the robot (m/s).
-        robot_x (float): Current x-coordinate of robot
-        robot_y (float): Current y-coordinate of robot
+        v_desired (multiproc variable): Linear velocity of the robot (m/s).
+        robot_x (multiproc variable): Current x-coordinate of robot
+        robot_y (multiproc variable): Current y-coordinate of robot
         dist (float): Distance for the robot to move in meters
         Kp (float): The proportional gain.
     '''
     # getting original coodinates as reference
-    start_x = robot_x
-    start_y = robot_x
+    start_x = robot_x.value
+    start_y = robot_y.value
     error = dist
-    while error > 0.01:        # runs until 1cm of target
+    while abs(error) > 0.01:        # runs until 1cm of target
         # finding the distance travelled and comparing to input
-        x_travelled = robot_x - start_x
-        y_travelled = robot_y - start_y
+        x_travelled = robot_x.value - start_x
+        y_travelled = robot_y.value - start_y
         distance_travelled = (x_travelled**2 + y_travelled**2) ** 0.5
         error = dist - distance_travelled
         v_desired = Kp*error
@@ -166,10 +170,9 @@ def milestone1_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     #     error, w_desired.value = rotate_robot(start_theta = start_theta, robot_theta = theta.value, angle_to_turn = angle_to_turn)
     #     print('w_desired: ', w_desired)
     #     print('theta: ', theta.value)
-    w_desired.value = -0.262
-    time.sleep(6.0)
-    w_desired.value = 0
+    rotate_robot(w_desired = w_desired, robot_theta = theta, angle_to_turn = np.pi/2)
     print("Sleep 5 sec")
+    w_desired.value = 0
     time.sleep(5.0)
 
     # rotate_robot(w_desired = w_desired.value, robot_theta = theta.value, angle_to_turn = np.pi/2)
@@ -177,9 +180,7 @@ def milestone1_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
 
     # moving 1 meter forward
     print('moving forward')
-    # move_forward(v_deisred = v_desired.value, robot_x = robot_x.value, robot_y = robot_y.value, dist = 1)
-    v_desired.value = 0.1
-    time.sleep(3.0)
+    move_forward(v_deisred = v_desired, robot_x = robot_x, robot_y = robot_y, dist = 0.3)
     v_desired.value = 0
     time.sleep(5.0)
     
