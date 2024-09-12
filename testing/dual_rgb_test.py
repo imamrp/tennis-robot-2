@@ -3,13 +3,6 @@ import board
 import busio
 import adafruit_tcs34725
 import RPi.GPIO as GPIO
-import pigpio
-
-pi = pigpio.pi()
-pi.set_mode(7, pigpio.ALT5)
-pi.set_mode(8, pigpio.ALT5)
-pi.set_mode(10, pigpio.ALT5)
-pi.set_mode(11, pigpio.ALT5)
 
 i2c1 = busio.I2C(scl=board.D7, sda=board.D8)
 i2c2 = busio.I2C(scl=board.D11, sda=board.D10)
