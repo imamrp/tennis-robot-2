@@ -45,7 +45,6 @@ while True:
     sensor1 = init_sensor()
     r, g, b = read_sensor(sensor1)
     print('Sensor 1 Color: ({0}, {1}, {2})'.format(r, g, b))
-    #time.sleep(0.1)
 
     # Turn on Sensor 2 and read data
     GPIO.output(SENSOR1_POWER_PIN, GPIO.HIGH)
@@ -54,4 +53,3 @@ while True:
     sensor2 = init_sensor()
     r, g, b = read_sensor(sensor2)
     print('Sensor 2 Color: ({0}, {1}, {2})'.format(r, g, b))
-    #time.sleep(0.1)

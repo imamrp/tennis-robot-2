@@ -1,0 +1,58 @@
+import time
+import board
+import adafruit_tcs34725
+import RPi.GPIO as GPIO
+
+class DualSensorReader:
+    SENSOR1_POWER_PIN = 17
+    SENSOR2_POWER_PIN = 27
+    LED_PIN = 4
+    WAKEUP_TIME = 0.003
+
+    def __init__(self):
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(self.SENSOR1_POWER_PIN, GPIO.OUT)
+        GPIO.setup(self.SENSOR2_POWER_PIN, GPIO.OUT)
+        GPIO.setup(self.LED_PIN, GPIO.OUT)
+        GPIO.output(self.SENSOR1_POWER_PIN, GPIO.LOW)
+        GPIO.output(self.SENSOR2_POWER_PIN, GPIO.LOW)
+        self.led_state = False
+
+    def toggle_led(self):
+        self.led_state = not self.led_state
+        GPIO.output(self.LED_PIN, self.led_state)
+
+    def init_sensor(self):
+        i2c = board.I2C()
+        sensor = adafruit_tcs34725.TCS34725(i2c)
+        sensor.integration_time = 2.4
+        sensor.gain = 60
+        return sensor
+
+    def read_sensor(self, sensor):
+        r, g, b = sensor.color_rgb_bytes
+        return r, g, b
+
+    def read_both_sensors(self):
+        GPIO.output(self.SENSOR1_POWER_PIN, GPIO.LOW)
+        GPIO.output(self.SENSOR2_POWER_PIN, GPIO.HIGH)
+        time.sleep(self.WAKEUP_TIME)
+        sensorR = self.init_sensor()
+        rgbR = self.read_sensor(sensorR)
+
+        GPIO.output(self.SENSOR1_POWER_PIN, GPIO.HIGH)
+        GPIO.output(self.SENSOR2_POWER_PIN, GPIO.LOW)
+        time.sleep(self.WAKEUP_TIME)
+        sensorL = self.init_sensor()
+        rgbL = self.read_sensor(sensorL)
+
+        return rgbR, rgbL
+
+# Test
+if __name__ == "__main__":
+    reader = DualSensorReader()
+
+    while True:
+        sensorR, sensorL = reader.read_both_sensors()
+        print('Sensor 1 (R) Color: {}'.format(sensorR))
+        print('Sensor 2 (L) Color: {}'.format(sensorL))
