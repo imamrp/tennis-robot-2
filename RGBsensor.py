@@ -51,7 +51,7 @@ class DualSensorReader:
 # Test
 if __name__ == "__main__":
     reader = DualSensorReader()
-
+    reader.toggle_led()
     while True:
         sensorR, sensorL = reader.read_both_sensors()
         print('Sensor 1 (R) Color: {}'.format(sensorR))
