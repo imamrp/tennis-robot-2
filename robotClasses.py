@@ -56,7 +56,7 @@ class DiffDriveRobot:
 
         # setting encoders
         self.encoderR = gpiozero.RotaryEncoder(a=5, b=6,max_steps=100000)
-        self.encoderL = gpiozero.RotaryEncoder(a=2, b=3,max_steps=100000)
+        self.encoderL = gpiozero.RotaryEncoder(a=23, b=24,max_steps=100000)
         
         # Controller parameters
         self.Kp = Kp
