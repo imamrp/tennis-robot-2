@@ -33,7 +33,7 @@ def toggle_led():
     led_state = not led_state
     GPIO.output(LED_PIN, led_state)
 
-toggle_led()
+#toggle_led()
 
 while True:
     # Turn on Sensor 1 and read data
