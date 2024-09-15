@@ -39,17 +39,17 @@ while True:
     # Turn on Sensor 1 and read data
     GPIO.output(SENSOR1_POWER_PIN, GPIO.HIGH)
     GPIO.output(SENSOR2_POWER_PIN, GPIO.LOW)
-    time.sleep(0.1)
+    #time.sleep(0.1)
     sensor1 = init_sensor()
     r, g, b = read_sensor(sensor1)
     print('Sensor 1 Color: ({0}, {1}, {2})'.format(r, g, b))
-    time.sleep(0.1)
+    #time.sleep(0.1)
 
     # Turn on Sensor 2 and read data
     GPIO.output(SENSOR1_POWER_PIN, GPIO.LOW)
     GPIO.output(SENSOR2_POWER_PIN, GPIO.HIGH)
-    time.sleep(0.1)
+    #time.sleep(0.1)
     sensor2 = init_sensor()
     r, g, b = read_sensor(sensor2)
     print('Sensor 2 Color: ({0}, {1}, {2})'.format(r, g, b))
-    time.sleep(0.1)
+    #time.sleep(0.1)
