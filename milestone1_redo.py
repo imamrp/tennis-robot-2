@@ -158,36 +158,36 @@ def milestone1_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
         None
     """
     print("Milestone 1 process initiated...\n\n\n")
-    '''Stage 1: go to center'''
-    # rotating 90 degrees left test
-    # angle_to_turn = np.pi/2
-    # start_theta = theta.value
-    # error = angle_to_turn
-    # print('rotating robot')
-    # while abs(error) > 0.02:
-    #     error, w_desired.value = rotate_robot(start_theta = start_theta, robot_theta = theta.value, angle_to_turn = angle_to_turn)
-    #     print('w_desired: ', w_desired)
-    #     print('theta: ', theta.value)
-    rotate_robot(w_desired = w_desired, robot_theta = theta, angle_to_turn = np.pi/2)
-    print("Sleep 5 sec")
-    w_desired.value = 0
-    time.sleep(5.0)
-
-    # rotate_robot(w_desired = w_desired.value, robot_theta = theta.value, angle_to_turn = np.pi/2)
+    # '''Stage 1: go to center'''
+    # # rotating 90 degrees left test
+    # # angle_to_turn = np.pi/2
+    # # start_theta = theta.value
+    # # error = angle_to_turn
+    # # print('rotating robot')
+    # # while abs(error) > 0.02:
+    # #     error, w_desired.value = rotate_robot(start_theta = start_theta, robot_theta = theta.value, angle_to_turn = angle_to_turn)
+    # #     print('w_desired: ', w_desired)
+    # #     print('theta: ', theta.value)
+    # rotate_robot(w_desired = w_desired, robot_theta = theta, angle_to_turn = np.pi/2)
+    # print("Sleep 5 sec")
     # w_desired.value = 0
+    # time.sleep(5.0)
 
-    # moving 1 meter forward
-    print('moving forward')
-    move_forward(v_deisred = v_desired, robot_x = robot_x, robot_y = robot_y, dist = 0.3)
-    v_desired.value = 0
-    time.sleep(5.0)
+    # # rotate_robot(w_desired = w_desired.value, robot_theta = theta.value, angle_to_turn = np.pi/2)
+    # # w_desired.value = 0
+
+    # # moving 1 meter forward
+    # print('moving forward')
+    # move_forward(v_deisred = v_desired, robot_x = robot_x, robot_y = robot_y, dist = 0.3)
+    # v_desired.value = 0
+    # time.sleep(5.0)
     
-    # returning back to origin
-    print('finished forward movement')
-    move_to_coord(x_desired = 0, y_desired = 0, robot_x = robot_x, robot_y = robot_y, theta = theta, w_desired = w_desired, v_desired = v_desired)
-    print('returned to start')
+    # # returning back to origin
+    # print('finished forward movement')
+    # move_to_coord(x_desired = 0, y_desired = 0, robot_x = robot_x, robot_y = robot_y, theta = theta, w_desired = w_desired, v_desired = v_desired)
+    # print('returned to start')
     
-    '''Stage 2: rotate in place and see a ball'''
+    # '''Stage 2: rotate in place and see a ball'''
     
     
     '''Stage 3: Ball alignment and move towards the ball'''
