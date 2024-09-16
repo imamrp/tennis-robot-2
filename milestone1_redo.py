@@ -199,8 +199,7 @@ def milestone1_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
 
         if center.value != -1:
             print(f"Target w: {w_desired.value}, Center: {center.value}, Radius: {radius.value}")
-            time.sleep(0.1)
-
+            
     # Stop at the ball
     v_desired.value = 0
     w_desired.value = 0
