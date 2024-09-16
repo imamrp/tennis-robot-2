@@ -51,7 +51,7 @@ def allign_to_ball(ball_center:int, sum_error:int, v_desired:float, desired_cent
         w_desired = 0.2
         v_desired = 0
         sum_error = 0
-        return w_desired, sum_error
+        return w_desired, v_desired, sum_error
     
     # Find error
     error = desired_center - ball_center
