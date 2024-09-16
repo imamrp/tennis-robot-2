@@ -32,7 +32,7 @@ def update_ball_center(center, radius): # Takes approximately 0.2s to process on
             radius.value = -1
         # print(f"X: {center.value} R: {radius.value}")
             
-def allign_to_ball(ball_center:int, sum_error:int, v_desired:float, desired_center=340, Kp=2e-4, Ki=1e-6, Kd=1e-6):
+def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=2e-4, Ki=1e-6, Kd=1e-6):
     """Function will return a forward velocity and the angular velocity needed to go towards a ball.
     To determine the angular velocity, this function uses a PI controller.
 
@@ -48,10 +48,9 @@ def allign_to_ball(ball_center:int, sum_error:int, v_desired:float, desired_cent
     """
     # If ball out of frame
     if (ball_center==-1):
-        w_desired = 0.2
-        v_desired = 0
+        w_desired = 0
         sum_error = 0
-        return w_desired, v_desired, sum_error
+        return w_desired, sum_error
     
     # Find error
     error = desired_center - ball_center
@@ -60,7 +59,7 @@ def allign_to_ball(ball_center:int, sum_error:int, v_desired:float, desired_cent
     w_desired = Kp*error
     
     sum_error += error
-    return w_desired, v_desired, sum_error
+    return w_desired, sum_error
 
 def rotate_robot(w_desired, robot_theta, angle_to_turn, Kp = 6e-1):
     '''
@@ -194,8 +193,9 @@ def milestone1_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     '''Stage 3: Ball alignment and move towards the ball'''
     alignment_error_sum = 0
     while radius.value < 130:
+        v_desired.value = 0.035 # Set slow forward speed
         # Get the desired rotational velocity
-        w_desired.value, v_desired.value, alignment_error_sum = allign_to_ball(ball_center=center.value, v_desired=0.035, sum_error=alignment_error_sum, desired_center=340)
+        w_desired.value, alignment_error_sum = allign_to_ball(ball_center=center.value, sum_error=alignment_error_sum, desired_center=340)
 
         if center.value != -1:
             print(f"Target w: {w_desired.value}, Center: {center.value}, Radius: {radius.value}")
