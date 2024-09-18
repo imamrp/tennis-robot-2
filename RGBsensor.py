@@ -17,6 +17,7 @@ class DualSensorReader:
         GPIO.output(self.SENSOR1_POWER_PIN, GPIO.LOW)
         GPIO.output(self.SENSOR2_POWER_PIN, GPIO.LOW)
         self.led_state = False
+        self.base_colour = None
 
     def toggle_led(self):
         self.led_state = not self.led_state
@@ -47,6 +48,15 @@ class DualSensorReader:
         rgbL = self.read_sensor(sensorL)
 
         return rgbR, rgbL
+    
+    def set_base_colour(self):
+        self.base_colour, _ = self.read_both_sensors()
+    
+    def is_line_detected(self):
+        rgbR, rgbL = self.read_both_sensors()
+        if rgbR != self.base_colour or rgbL != self.base_colour:
+            return True
+        return False
 
 # Test
 if __name__ == "__main__":
