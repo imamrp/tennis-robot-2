@@ -54,7 +54,7 @@ class DualSensorReader:
     
     def colour_difference(self, rgbA, rgbB):
         delta = (rgbA[0]-rgbB[0], rgbA[1]-rgbB[1], rgbA[2]-rgbB[2])
-        return math.sqrt(abs(delta[0])^2 + abs(delta[1])^2 +abs(delta[2])^2)
+        return math.sqrt(abs(delta[0])^2 + abs(delta[1])^2 + abs(delta[2])^2)
 
     def set_base_colour(self):
         self.base_colour, _ = self.read_both_sensors()
@@ -66,13 +66,7 @@ class DualSensorReader:
         rgbR, rgbL = self.read_both_sensors()
         detectR = self.colour_difference(rgbR, self.base_colour) > self.threshold
         detectL = self.colour_difference(rgbL, self.base_colour) > self.threshold
-        if detectR and detectL:
-            return True, "RL"
-        elif detectR:
-            return True, "R"
-        elif detectL:
-            return True, "L"
-        return False, ""
+        return (detectL, detectR)
 
 # Test
 if __name__ == "__main__":
