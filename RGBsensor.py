@@ -64,9 +64,15 @@ class DualSensorReader:
     
     def is_line_detected(self):
         rgbR, rgbL = self.read_both_sensors()
-        if self.colour_difference(rgbR, self.base_colour) > self.threshold or self.colour_difference(rgbL, self.base_colour) > self.threshold:
-            return True
-        return False
+        detectR = self.colour_difference(rgbR, self.base_colour) > self.threshold
+        detectL = self.colour_difference(rgbL, self.base_colour) > self.threshold
+        if detectR and detectL:
+            return True, "RL"
+        elif detectR:
+            return True, "R"
+        elif detectL:
+            return True, "L"
+        return False, ""
 
 # Test
 if __name__ == "__main__":
