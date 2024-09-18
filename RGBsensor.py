@@ -2,6 +2,7 @@ import time
 import board
 import adafruit_tcs34725
 import RPi.GPIO as GPIO
+import math
 
 class DualSensorReader:
     SENSOR1_POWER_PIN = 17
@@ -9,7 +10,7 @@ class DualSensorReader:
     LED_PIN = 4
     WAKEUP_TIME = 0.003
 
-    def __init__(self):
+    def __init__(self, threshold = 50):
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.SENSOR1_POWER_PIN, GPIO.OUT)
         GPIO.setup(self.SENSOR2_POWER_PIN, GPIO.OUT)
@@ -18,6 +19,8 @@ class DualSensorReader:
         GPIO.output(self.SENSOR2_POWER_PIN, GPIO.LOW)
         self.led_state = False
         self.base_colour = None
+        self.threshold = threshold
+        self.set_base_colour()
 
     def toggle_led(self):
         self.led_state = not self.led_state
@@ -49,12 +52,19 @@ class DualSensorReader:
 
         return rgbR, rgbL
     
+    def colour_difference(self, rgbA, rgbB):
+        delta = (rgbA[0]-rgbB[0], rgbA[1]-rgbB[1], rgbA[2]-rgbB[2])
+        return math.sqrt(abs(delta[0])^2 + abs(delta[1])^2 +abs(delta[2])^2)
+
     def set_base_colour(self):
         self.base_colour, _ = self.read_both_sensors()
+
+    def set_threshold(self, threshold):
+        self.threshol = threshold
     
     def is_line_detected(self):
         rgbR, rgbL = self.read_both_sensors()
-        if rgbR != self.base_colour or rgbL != self.base_colour:
+        if self.colour_difference(rgbR, self.base_colour) > self.threshold or self.colour_difference(rgbL, self.base_colour) > self.threshold:
             return True
         return False
 
