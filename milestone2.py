@@ -57,30 +57,42 @@ def update_ball_center(center, radius): # Takes approximately 0.2s to process on
             radius.value = -1
         # print(f"X: {center.value} R: {radius.value}")
 
-def robot_control_process(v_desired, w_desired, theta):
+def robot_control_process(v_desired,w_desired, rotbot_x, robot_y, theta):
     """The process that controls the robot's motors continuously and repeatedly.
 
     Args:
         v_desired (float): The desired speed of the robot
+        w_desired (float): Angular velocity of the robot (rad/s). Positive is moving counter clockwise (left).
+        robot_x (float): Current x-coordinate of robot
+        robot_y (float): Current y-coordinate of robot
+        theta (float): Current angle of robot in radians
     """
     robot = DiffDriveRobot()
     print("Robot motor control process initiated...\n\n\n")
     while True:
         duty_cycle_L, duty_cycle_R, wL_desired, wL_measured, wR_desired, wR_measured = robot.drive(v_desired=v_desired.value, w_desired=w_desired.value) 
+        # getting current state of robot
+        robot_x.value = robot.x
+        robot_y.value = robot.y
         theta.value = robot.th
 
-def milestone2_process(v_desired, w_desired, center, radius, theta):
+def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, theta):
     """The process that controls the finite state machine (FSM) for the milestone 2 task. States are numbered with integers as follows:
-        State 0: State where the robot is first activated. Transitions: 
-        State 1:
-        State 2:
-        ... TODO: add other states
+        State 0: State where the robot is first activated and moved to the center of the arena. Transitions: State 1
+        State 1: State where the robot rotates in place until a ball is located. Transitions: State 2
+        State 2: State where the robot aligns with the ball and moves toward it, ready for pickup. Transitions: States 1, 3
+        State 3: State where the robot jerks forward to pick up the ball. Transitions: States 1, 4
+        State 4: State where the robot drives to the line between court 2 and 4. Transitions: State 5
+        State 5: State where the robot reverses along the line utill it is close to the box. Transitions: State 6
+        State 6: State where the robot deposits the balls into the box. Transitions: State 0
 
     Args:
         v_desired (float): The desired speed of the robot
         w_desired (float): The desired rotational speed of the robot speed of the robot
         center (int): The center of the ball in the frame (340 is exactly center, >340 is to the right of the frame, <340 is the left)
         radius (int): The radius of the largest ball in pixels.
+        robot_x (float): Current x-coordinate of robot
+        robot_y (float): Current y-coordinate of robot
         theta (float): The angle of the robot with respect to the starting position. Positive is counter clockwise.
     """
 
