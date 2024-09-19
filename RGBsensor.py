@@ -73,7 +73,7 @@ class DualSensorReader:
 # Test
 if __name__ == "__main__":
     reader = DualSensorReader(5)
-    GPIO.output(4, GPIO.LOW)
+    GPIO.output(4, GPIO.HIGH)
     while True:
         print(reader.is_line_detected())
-        time.sleep(0.2)
+        time.sleep(1)
