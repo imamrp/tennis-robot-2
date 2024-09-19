@@ -72,7 +72,7 @@ class DualSensorReader:
 
 # Test
 if __name__ == "__main__":
-    reader = DualSensorReader(10)
-    reader.toggle_led()
+    reader = DualSensorReader(5)
+    #reader.toggle_led()
     while True:
         print(reader.is_line_detected())
