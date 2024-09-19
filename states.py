@@ -141,6 +141,10 @@ def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=340
 
     return ball_collected
 
+def line_detector():
+    # placeholder until implemented
+    return None 
+
 ### State Functions ###
 def state0(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_desired):
   '''
@@ -260,7 +264,9 @@ def state5(v_desired, w_desired, ultrasonic_dist):
     '''
     print('reversing down the line')
     v_desired.value = -0.05        # TODO: test reversing speed
+    ultrasonic_dist = 1000
     while ultrasonic_dist > 10:    # TODO: test distance from box
+        ultrasonic_dist = get_ultra_dist()
         lines_detected = line_detector()
         if line_detected[0]:    # line on left detector
             w_desired.value -= 0.1
@@ -274,6 +280,16 @@ def state5(v_desired, w_desired, ultrasonic_dist):
     robot_x.value = 5.48 - 0.2
     robot_y.value = 8.23/2
     theta.value = np.pi
+
+def state6():
+    '''
+    Deposit balls into the box
+
+    Args:
+        None
+    '''
+    # TODO: create a function to open the latch with a servo
+    open_latch()
     
 
     
