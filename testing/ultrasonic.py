@@ -4,7 +4,7 @@ import time
 
 # setup
 TRIG = 10
-ECHO = 11
+ECHO = 9
 
 sensor = gpiozero.DistanceSensor(echo=ECHO,trigger=TRIG, max_distance=2.0)
 print ("Waiting For Sensor To Settle")
