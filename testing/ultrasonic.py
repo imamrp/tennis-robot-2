@@ -3,8 +3,8 @@ import RPi.GPIO as GPIO
 import time
 
 # setup
-TRIG = 3
-ECHO = 2
+TRIG = 27
+ECHO = 17
 
 sensor = gpiozero.DistanceSensor(echo=ECHO,trigger=TRIG)
 print ("Waiting For Sensor To Settle")
