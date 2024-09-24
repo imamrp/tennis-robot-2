@@ -1,22 +1,20 @@
 import cv2
 
-# open camera
-cap = cv2.VideoCapture('/dev/video0', cv2.CAP_V4L)
+# Open the camera (0 is usually the USB camera)
+cap = cv2.VideoCapture(0)  # Use 0 if your USB camera is detected as /dev/video0
 
-# set dimensions
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, 2560)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1440)
-
-# take frame
-ret, frame = cap.read()
-
-# check if frame was captured successfully
-if ret:
-    # write frame to file
-    cv2.imwrite('image.jpg', frame)
-    print("Image saved successfully")
+# Check if the camera opened successfully
+if not cap.isOpened():
+    print("Failed to open the camera")
 else:
-    print("Failed to capture image")
+    # Capture a frame
+    ret, frame = cap.read()
+    if ret:
+        # Save the captured image
+        cv2.imwrite('image.jpg', frame)
+        print("Image saved as image.jpg")
+    else:
+        print("Failed to capture image")
 
-# release camera
+# Release the camera
 cap.release()
