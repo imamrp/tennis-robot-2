@@ -32,12 +32,13 @@ def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=6e-4, 
     return w_desired, sum_error
 
 #### Processes ####
-def update_ball_center(center, radius): # Takes approximately 0.2s to process one frame
+def update_ball_center(center, radius, use_cam): # Takes approximately 0.2s to process one frame
     """Function (or process) that updates the center of the ball and its radius in the camera frame.
 
     Args:
         center (int): The center of the ball in the frame (340 is exactly center, >340 is to the right of the frame, <340 is the left)
         radius (int): The radius of the largest ball in pixels.
+        use_cam (bool): Whether to turn the camera on or off
 
     Returns:
         None
@@ -45,17 +46,22 @@ def update_ball_center(center, radius): # Takes approximately 0.2s to process on
     print("Ball detection process initiated...\n\n\n")
     detector = detection.TennisBallDetector()
     while True:
-        _, frame = detector.cap.read()
-        detected_balls = detector.process_frame(frame)
-        detected_center = detector.get_circle_1_center(detected_balls)
-        detected_radius = detector.get_circle_1_radius(detected_balls)
-        if detected_center:
-            center.value = detected_center[0]
-            radius.value = detected_radius
+        if use_cam.value is True:
+            _, frame = detector.cap.read()
+            detected_balls = detector.process_frame(frame)
+            detected_center = detector.get_circle_1_center(detected_balls)
+            detected_radius = detector.get_circle_1_radius(detected_balls)
+            if detected_center:
+                center.value = detected_center[0]
+                radius.value = detected_radius
+            else:
+                center.value = -1
+                radius.value = -1
+            # print(f"X: {center.value} R: {radius.value}")
         else:
             center.value = -1
             radius.value = -1
-        # print(f"X: {center.value} R: {radius.value}")
+
 
 def robot_control_process(v_desired,w_desired, rotbot_x, robot_y, theta):
     """The process that controls the robot's motors continuously and repeatedly.
@@ -76,7 +82,7 @@ def robot_control_process(v_desired,w_desired, rotbot_x, robot_y, theta):
         robot_y.value = robot.y
         theta.value = robot.th
 
-def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, theta):
+def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, theta, use_cam):
     """The process that controls the finite state machine (FSM) for the milestone 2 task. States are numbered with integers as follows:
         State 0: State where the robot is first activated and moved to the center of the arena. Transitions: State 1
         State 1: State where the robot rotates in place until a ball is located. Transitions: State 2
@@ -94,6 +100,7 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
         robot_x (float): Current x-coordinate of robot
         robot_y (float): Current y-coordinate of robot
         theta (float): The angle of the robot with respect to the starting position. Positive is counter clockwise.
+        use_cam (bool): Whether to turn the camera on or off
     """
 
     """Setup"""
@@ -188,9 +195,10 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
 #### Running File ####
 if __name__ == "__main__":
     '''Start the update_ball_center process'''
+    use_cam = multiprocessing.Value('b', False)
     center = multiprocessing.Value('i', -1)
     radius = multiprocessing.Value('i', -1)
-    center_process = multiprocessing.Process(target=update_ball_center, args=(center, radius))
+    center_process = multiprocessing.Process(target=update_ball_center, args=(center, radius, use_cam))
     center_process.start()
 
     '''Start process for motor control'''
@@ -204,7 +212,7 @@ if __name__ == "__main__":
 
 
     '''Main process'''
-    main_process = multiprocessing.Process(target=milestone1_process, args=(v_desired, w_desired, center, radius, robot_x, robot_y, theta))
+    main_process = multiprocessing.Process(target=milestone1_process, args=(v_desired, w_desired, center, radius, robot_x, robot_y, theta, use_cam))
     main_process.start()
 
     '''Join processes'''
