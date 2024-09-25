@@ -18,7 +18,8 @@ class DualSensorReader:
         GPIO.output(self.SENSOR1_POWER_PIN, GPIO.LOW)
         GPIO.output(self.SENSOR2_POWER_PIN, GPIO.LOW)
         self.led_state = False
-        self.base_colour = None
+        self.base_colourR = None
+        self.base_colourL = None
         self.threshold = threshold
         self.set_base_colour()
 
@@ -59,15 +60,15 @@ class DualSensorReader:
         return result
 
     def set_base_colour(self):
-        self.base_colour, _ = self.read_both_sensors()
+        self.base_colourR, self.base_colourL = self.read_both_sensors()
 
     def set_threshold(self, threshold):
         self.threshold = threshold
     
     def is_line_detected(self):
         rgbR, rgbL = self.read_both_sensors()
-        detectR = self.colour_difference(rgbR, self.base_colour) > self.threshold
-        detectL = self.colour_difference(rgbL, self.base_colour) > self.threshold
+        detectR = self.colour_difference(rgbR, self.base_colourR) > self.threshold
+        detectL = self.colour_difference(rgbL, self.base_colourL) > self.threshold
         return (detectL, detectR)
 
 # Test
