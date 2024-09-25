@@ -73,6 +73,7 @@ class DualSensorReader:
 # Test
 if __name__ == "__main__":
     reader = DualSensorReader(4)
+    reader.toggle_led()
     GPIO.output(4, GPIO.LOW)
     while True:
         print(reader.is_line_detected())
