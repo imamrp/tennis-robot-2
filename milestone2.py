@@ -1,5 +1,6 @@
 from robotClasses import DiffDriveRobot
-import detection, multiprocessing, time, RGBsensor
+import RPi.GPIO as GPIO
+import detection, multiprocessing, time, RGBsensor, gpiozero, 
 
 #### Functions ####
 def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=6e-4, Ki=1e-3):
@@ -66,10 +67,14 @@ def sensor_process():
     """
         This process controls the Ultrasonic and RGB sensors
     """
-    reader = RGBsensor.DualSensorReader(4)
+    TRIG = 10
+    ECHO = 9
+    dist_sensor = gpiozero.DistanceSensor(echo=ECHO,trigger=TRIG, max_distance=1.0)
+    rgb_sensor = RGBsensor.DualSensorReader(4)
     GPIO.output(4, GPIO.HIGH)
     while True:
-        print(reader.is_line_detected())
+        print(rgb_sensor.is_line_detected())
+        print('Distance: ', dist_sensor.distance * 100)
         time.sleep(0.01)
 
 def robot_control_process(v_desired,w_desired, rotbot_x, robot_y, theta):
