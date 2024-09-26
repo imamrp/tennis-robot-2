@@ -136,6 +136,7 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
         #### State 1: Find ball by rotating in place ####
         elif state == 1:
             print("State 1: Finding ball\n\n\n")
+            use_cam.value = True
             states.state1(w_desired, center)
             state = 2
         
