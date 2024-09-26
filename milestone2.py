@@ -1,6 +1,6 @@
 from robotClasses import DiffDriveRobot
 import RPi.GPIO as GPIO
-import detection, multiprocessing, time, RGBsensor, gpiozero, 
+import detection, multiprocessing, time, RGBsensor, gpiozero, states
 
 #### Functions ####
 def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=6e-4, Ki=1e-3):
@@ -119,15 +119,16 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
 
     """Setup"""
     state = 0
+    balls_collected = 0
     
     """While loop FSM"""
     while True:
         #### State 0: Orient and go to center from start ####
         if state == 0:
             print("State 0: Traversing to center\n\n\n")
-
+            states.state0(robot_x, robot_y, theta, w_desired, v_desired)
             # Orient to center
-            
+            state = 1
             
             # traverse to center
 
@@ -135,69 +136,45 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
         #### State 1: Find ball by rotating in place ####
         elif state == 1:
             print("State 1: Finding ball\n\n\n")
-            while True:
-                # Rotate in place
-                v_desired.value = 0 
-                w_desired.value = 0.2
-                
-                # Pause if ball seen
-                if center.value != -1:
-                    w_desired.value = 0
-                    time.sleep(2)
-                    
-                    if center.value != -1: # if ball seen -> state 2
-                        state = 2
-                        break
-                
+            states.state1(w_desired, ball_center)
+            state = 2
         
         #### State 2: Align and move towards ball ####
         elif state == 2:
             print("State 2: Aligning with and moving to ball\n\n\n")
-            
-            # Aligning and going forward
-            alignment_error_sum = 0
-            while radius.value < 130: 
-                v_desired.value = 0.035 # Set slow forward speed
-                
-                # Get the desired rotational velocity
-                w_desired.value, alignment_error_sum = allign_to_ball(ball_center=center.value, 
-                                                                      sum_error=alignment_error_sum)
-
-                if center.value != -1: # Lost the ball
-                    state = 1
-            
-            # Ball is close 
-            v_desired.value = 0
-            w_desired.value = 0
-            state = 3
+            to_collect = states.state2(w_desired, v_desired, ball_center, radius)
+            if to_collect:
+                state = 3
+            else:
+                state = 1
             
         #### State 3: Collecting ball ####
         elif state == 3:
             print("State 3: Collecting ball\n\n\n")
-            
-            # Move forward for a bit
-            v_desired.value = 0.1
-            time.sleep(0.5)
-            v_desired.value = 0
+            balls_collected = states.state3(v_desired, balls_collected)
+            if balls_collected >= 3:
+                state = 4
+            else:
+                state = 1
         
         #### State 4: Drive to lines ####
         elif state == 4:
             print("State 4: Driving to lines\n\n\n")
-            
-            # Find closest line pointing to the box
-            
-            # While line NOT detected, drive forwards
-            
-            # Line detected -> turn away from the box (so that the rear is pointed towards box)
+            states.state4(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_desired)
+            state = 5
         
         #### State 5: Follow line to the box (driving backwards) ####
         elif state == 5:
             print("State 5: Follow line to box\n\n\n")
+            states.state5(v_desired, w_desired, ultrasonic_dist)
+            state = 6
             # While ultrasonics read more than a certain length, follow the line and drive backwards
         
         #### State 6: Drop balls and recovery ####
         elif state == 6:
             print("State 6: Dropping balls and recovering\n\n\n")
+            states.state6()
+            state = 0
             # Open hatch
             
             # Drive forward a bit
