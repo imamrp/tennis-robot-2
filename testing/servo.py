@@ -9,7 +9,7 @@ def ctrl_gate(servo, open):
     servo.value = 1 if open else -1 # Open gate
     sleep(1)
 
-for j in range(10):
+for j in range(2):
     ctrl_gate(servo,open=False)
     sleep(3)
     ctrl_gate(servo,open=True)
@@ -17,4 +17,5 @@ for j in range(10):
     sleep(1)
 
 # send servo to pos 0
+ctrl_gate(servo,open=False)
 ctrl_gate(servo,open=False)
