@@ -158,7 +158,7 @@ def state0(robot_x, robot_y, theta, w_desired, v_desired):
         v_desired (multiproc variable): Linear velocity of the robot (m/s).
     '''
     print('moving to center')
-    move_to_coord(x_desired = 5.48/2, y_desired = 8.23/4, robot_x, robot_y, theta, w_desired, v_desired)
+    move_to_coord(x_desired = (5.48/2), y_desired = (8.23/4), robot_x, robot_y, theta, w_desired, v_desired)
 
 def state1(w_desired, ball_center):
     '''
