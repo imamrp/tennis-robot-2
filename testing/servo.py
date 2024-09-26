@@ -17,5 +17,6 @@ for j in range(2):
     sleep(1)
 
 # send servo to pos 0
-ctrl_gate(servo,open=False)
+ctrl_gate(servo,open=True)
+sleep(3)
 ctrl_gate(servo,open=False)
