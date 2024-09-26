@@ -74,7 +74,7 @@ def sensor_process():
     GPIO.output(4, GPIO.HIGH)
     while True:
         print(rgb_sensor.is_line_detected())
-        print('Distance: ', dist_sensor.distance * 100)
+        # print('Distance: ', dist_sensor.distance * 100)
         time.sleep(0.01)
 
 def robot_control_process(v_desired,w_desired, rotbot_x, robot_y, theta):
