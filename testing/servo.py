@@ -20,3 +20,4 @@ for j in range(2):
 ctrl_gate(servo,open=True)
 sleep(3)
 ctrl_gate(servo,open=False)
+print("end")
