@@ -231,7 +231,7 @@ def state4(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_desired):
         v_desired (multiproc variable): Linear velocity of the robot (m/s).
     '''
     # moving untill 1m away from centre of the line
-    move_to_coord(x_desired = 5.48/2, y_desired = (8.23/2) - 1, robot_x, robot_y, theta, w_desired, v_desired)
+    move_to_coord((5.48/2), ((8.23/2) - 1), robot_x, robot_y, theta, w_desired, v_desired)
     print('1m away from line')
 
     # rotating to face line
