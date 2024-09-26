@@ -15,3 +15,4 @@ for j in range(10):
 
 # send servo to pos 0
 servo.value = 1
+sleep(1)
