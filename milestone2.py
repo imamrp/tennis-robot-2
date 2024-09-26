@@ -1,5 +1,5 @@
 from robotClasses import DiffDriveRobot
-import detection, multiprocessing, time
+import detection, multiprocessing, time, RGBsensor
 
 #### Functions ####
 def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=6e-4, Ki=1e-3):
@@ -62,6 +62,15 @@ def update_ball_center(center, radius, use_cam): # Takes approximately 0.2s to p
             center.value = -1
             radius.value = -1
 
+def sensor_process():
+    """
+        This process controls the Ultrasonic and RGB sensors
+    """
+    reader = RGBsensor.DualSensorReader(4)
+    GPIO.output(4, GPIO.HIGH)
+    while True:
+        print(reader.is_line_detected())
+        time.sleep(0.01)
 
 def robot_control_process(v_desired,w_desired, rotbot_x, robot_y, theta):
     """The process that controls the robot's motors continuously and repeatedly.
@@ -215,8 +224,13 @@ if __name__ == "__main__":
     main_process = multiprocessing.Process(target=milestone1_process, args=(v_desired, w_desired, center, radius, robot_x, robot_y, theta, use_cam))
     main_process.start()
 
+    '''Sensor Process'''
+    sensor_process = multiprocessing.Process(target=sensor_process)
+    sensor_process.start()
+
     '''Join processes'''
     motor_ctrl_process.join()
     center_process.join()
     main_process.join()
+    sensor_process.join()
     
