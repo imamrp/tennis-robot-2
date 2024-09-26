@@ -203,7 +203,7 @@ if __name__ == "__main__":
 
 
     '''Main process'''
-    main_process = multiprocessing.Process(target=milestone1_process, args=(v_desired, w_desired, center, radius, robot_x, robot_y, theta, use_cam))
+    main_process = multiprocessing.Process(target=milestone2_process, args=(v_desired, w_desired, center, radius, robot_x, robot_y, theta, use_cam))
     main_process.start()
 
     '''Sensor Process'''
