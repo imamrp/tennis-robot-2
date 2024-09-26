@@ -147,7 +147,7 @@ def line_detector():
 
 ### State Functions ###
 def state0(robot_x, robot_y, theta, w_desired, v_desired):
-  '''
+    '''
     Moves to the centre of the court
 
     Args:
