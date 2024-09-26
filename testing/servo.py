@@ -24,4 +24,5 @@ ctrl_gate(servo,open=True)
 sleep(3)
 print("close")
 ctrl_gate(servo,open=False)
+sleep(5)
 
