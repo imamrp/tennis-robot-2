@@ -146,13 +146,11 @@ def line_detector():
     return None 
 
 ### State Functions ###
-def state0(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_desired):
+def state0(robot_x, robot_y, theta, w_desired, v_desired):
   '''
     Moves to the centre of the court
 
     Args:
-        x_desired (float): Desired final x coordinate of the robot
-        y_desired (float): Desired final y coordinate of the robot
         robot_x (multiproc variable): Current x-coordinate of robot
         robot_y (multiproc variable): Current y-coordinate of robot
         theta (multiproc variable): Current angle of robot
