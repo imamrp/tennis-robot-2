@@ -8,7 +8,7 @@ import numpy as np
 import time
 
 ### movement functions ###
-def move_forward(v_desired, robot_x, robot_y, dist, Kp = 6e-1):
+def move_forward(v_desired, robot_x, robot_y, dist, Kp = 6e-2):
     '''
     Moves the robot forward dist meters from it's current position
 
@@ -30,7 +30,7 @@ def move_forward(v_desired, robot_x, robot_y, dist, Kp = 6e-1):
         y_travelled = robot_y.value - start_y
         distance_travelled = (x_travelled**2 + y_travelled**2) ** 0.5
         error = dist - distance_travelled
-        print('v desired ', v_desired.value)
+        #print('v desired ', v_desired.value)
 
 def rotate_robot(w_desired, robot_theta, angle_to_turn, Kp = 6e-1):
     '''
