@@ -8,7 +8,7 @@ import numpy as np
 import time
 
 ### movement functions ###
-def move_forward(v_deisred, robot_x, robot_y, dist, Kp = 6e-1):
+def move_forward(v_desired, robot_x, robot_y, dist, Kp = 6e-1):
     '''
     Moves the robot forward dist meters from it's current position
 
