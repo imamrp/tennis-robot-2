@@ -136,13 +136,13 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
         #### State 1: Find ball by rotating in place ####
         elif state == 1:
             print("State 1: Finding ball\n\n\n")
-            states.state1(w_desired, ball_center)
+            states.state1(w_desired, center)
             state = 2
         
         #### State 2: Align and move towards ball ####
         elif state == 2:
             print("State 2: Aligning with and moving to ball\n\n\n")
-            to_collect = states.state2(w_desired, v_desired, ball_center, radius)
+            to_collect = states.state2(w_desired, v_desired, center, radius)
             if to_collect:
                 state = 3
             else:
