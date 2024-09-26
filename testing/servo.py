@@ -19,10 +19,7 @@ def ctrl_gate(servo, open):
 #     print(j)
 
 # send servo to pos 0
-print("open")
-ctrl_gate(servo,open=True)
-sleep(3)
-print("close")
-ctrl_gate(servo,open=False)
-sleep(5)
+ctrl_gate(servo, False)
+while True:
+    pass
 
