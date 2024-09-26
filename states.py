@@ -82,7 +82,7 @@ def move_to_coord(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_de
     time.sleep(2)
 
     # moving robot forward
-    move_forward(v_deisred = v_desired, robot_x = robot_x, robot_y = robot_y, dist = dist)
+    move_forward(v_desired = v_desired, robot_x = robot_x, robot_y = robot_y, dist = dist)
     v_desired.value = 0
     time.sleep(2)
 
