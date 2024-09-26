@@ -5,14 +5,16 @@ from time import sleep
 PWM_pin = 11
 servo = Servo(PWM_pin,min_pulse_width=0.001, max_pulse_width=0.002,frame_width=0.0025)    # min and max pulse width may need to be changed if rom not large enough
 
+def ctrl_gate(servo, open):
+    servo.value = 1 if open else -1 # Open gate
+    sleep(1)
+
 for j in range(10):
-    servo.value = 1
-    print('Close')
+    ctrl_gate(servo,open=False)
     sleep(3)
-    servo.value = -1
+    ctrl_gate(servo,open=True)
     print('Open')
     sleep(1)
 
 # send servo to pos 0
-servo.value = 1
-sleep(1)
+ctrl_gate(servo,open=False)
