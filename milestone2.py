@@ -187,7 +187,7 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
         #### State 6: Drop balls and recovery ####
         elif state == 6:
             print("State 6: Dropping balls and recovering\n\n\n")
-            states.state6()
+            states.state6(servo)
             state = 0
             # Open hatch
             
