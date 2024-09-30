@@ -2,6 +2,10 @@ from robotClasses import DiffDriveRobot
 import RPi.GPIO as GPIO
 import detection, multiprocessing, time, RGBsensor, gpiozero, states
 
+from gpiozero import Servo, PWMOutputDevice
+from time import sleep
+
+
 #### Functions ####
 def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=6e-4, Ki=1e-3):
     """Function will return a forward velocity and the angular velocity needed to go towards a ball.
@@ -31,6 +35,12 @@ def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=6e-4, 
     
     sum_error += error
     return w_desired, sum_error
+
+def ctrl_gate(servo, open):
+    """Opens and closes gate
+    """
+    servo.value = -1 if open else 1 # Open gate
+    sleep(1)
 
 #### Processes ####
 def update_ball_center(center, radius, use_cam): # Takes approximately 0.2s to process one frame
@@ -120,7 +130,10 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     """Setup"""
     state = 0
     balls_collected = 0
-    
+
+    PWM_pin = 11
+    servo = Servo(PWM_pin,min_pulse_width=0.001, max_pulse_width=0.002,frame_width=0.0025)    # min and max pulse width may need to be changed if rom not large enough
+    ctrl_gate(servo, open=False)
     """While loop FSM"""
     while True:
         #### State 0: Orient and go to center from start ####
