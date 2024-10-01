@@ -120,7 +120,7 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     time.sleep(1)
     print('startup..')
     time.sleep(1)
-    print('startup...\\\\\n')
+    print('startup...\n\n\n\n\n')
     time.sleep(1)
     print(f'starting in state {state}') 
     
