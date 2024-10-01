@@ -286,6 +286,7 @@ def set_speed_process(v_desired,w_desired):
 
         v_desired.value = 0.1
         time.sleep(2)
+        v_desired.value = 0
         
 def robot_control_process(v_desired,w_desired):
     """The process that controls the robot's motors continuously and repeatedly.
