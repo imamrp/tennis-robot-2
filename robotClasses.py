@@ -284,7 +284,7 @@ def set_speed_process(v_desired,w_desired):
         # print(f"\n\n\n\nNew Speed: v={v_desired.value}; w={w_desired.value}")
         # time.sleep(5)
 
-        v_desired.value = 0.1
+        v_desired.value = 0.2
         time.sleep(2)
         v_desired.value = 0
         
