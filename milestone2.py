@@ -138,7 +138,7 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     while True:
         #### State 0: Orient and go to center from start ####
         if state == 0:
-            print("State 0: Traversing to center\n\n\n")
+            print("State 0: Traversing to center==============================\n\n\n")
             states.state0(robot_x, robot_y, theta, w_desired, v_desired)
             # Orient to center
             state = 1
@@ -148,14 +148,14 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
    
         #### State 1: Find ball by rotating in place ####
         elif state == 1:
-            print("State 1: Finding ball\n\n\n")
+            print("State 1: Finding ball====================================\n\n\n")
             use_cam.value = True
             states.state1(w_desired, center)
             state = 2
         
         #### State 2: Align and move towards ball ####
         elif state == 2:
-            print("State 2: Aligning with and moving to ball\n\n\n")
+            print("State 2: Aligning with and moving to ball====================\n\n\n")
             to_collect = states.state2(w_desired, v_desired, center, radius)
             if to_collect:
                 state = 3
@@ -164,7 +164,7 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
             
         #### State 3: Collecting ball ####
         elif state == 3:
-            print("State 3: Collecting ball\n\n\n")
+            print("State 3: Collecting ball====================================\n\n\n")
             balls_collected = states.state3(v_desired, balls_collected)
             if balls_collected >= 3:
                 state = 4
@@ -173,20 +173,20 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
         
         #### State 4: Drive to lines ####
         elif state == 4:
-            print("State 4: Driving to lines\n\n\n")
+            print("State 4: Driving to lines====================================\n\n\n")
             states.state4(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_desired)
             state = 5
         
         #### State 5: Follow line to the box (driving backwards) ####
         elif state == 5:
-            print("State 5: Follow line to box\n\n\n")
+            print("State 5: Follow line to box=====================================\n\n\n")
             states.state5(v_desired, w_desired, ultrasonic_dist)
             state = 6
             # While ultrasonics read more than a certain length, follow the line and drive backwards
         
         #### State 6: Drop balls and recovery ####
         elif state == 6:
-            print("State 6: Dropping balls and recovering\n\n\n")
+            print("State 6: Dropping balls and recovering==============================\n\n\n")
             states.state6(servo)
             state = 0
             # Open hatch
@@ -194,7 +194,7 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
             # Drive forward a bit
         
         else:
-            print(f"Invalid state: '{state}\n\n\n\'")
+            print(f"Invalid state: '{state}'==============================================\n\n\n")
             quit()
         
 #### Running File ####
