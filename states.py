@@ -211,7 +211,7 @@ def state3(v_desired, balls_collected):
     '''
     # Move forward for a bit
     v_desired.value = 0.1
-    time.sleep(0.5)
+    time.sleep(3)
     v_desired.value = 0
     print('ball collected')
     return
