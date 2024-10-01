@@ -158,6 +158,8 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
         #### State 3: Collecting ball ####
         elif state == 3:
             print("State 3: Collecting ball====================================\n\n\n")
+            v_desired.value = 0.3
+            time.sleep(10)
             states.state3(v_desired, balls_collected)
             balls_collected += 1
             if balls_collected >= 3:
