@@ -60,6 +60,7 @@ def sensor_process(box_distance, left_line_detected, right_line_detected):
     GPIO.output(4, GPIO.HIGH)
     while True:
         left_line_detected.value, right_line_detected.value = rgb_sensor.is_line_detected()
+        print(left_line_detected.value, right_line_detected.value)
         box_distance.value = dist_sensor.distance*100
         time.sleep(0.01)
 
