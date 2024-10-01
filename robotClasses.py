@@ -279,10 +279,13 @@ def set_speed_process(v_desired,w_desired):
         # print(f"\n\n\n\nNew Speed: v={v_desired.value}; w={w_desired.value}")
         # time.sleep(5)
         # else:
-        w_desired.value = float(random.choice([-0.5,0,0.5]))
-        v_desired.value = float(0)
-        print(f"\n\n\n\nNew Speed: v={v_desired.value}; w={w_desired.value}")
-        time.sleep(5)
+        # w_desired.value = float(random.choice([-0.5,0,0.5]))
+        # v_desired.value = float(0)
+        # print(f"\n\n\n\nNew Speed: v={v_desired.value}; w={w_desired.value}")
+        # time.sleep(5)
+
+        v_desired.value = 0.1
+        time.sleep(2)
         
 def robot_control_process(v_desired,w_desired):
     """The process that controls the robot's motors continuously and repeatedly.
