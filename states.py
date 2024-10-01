@@ -280,15 +280,20 @@ def state5(v_desired, w_desired, ultrasonic_dist):
     robot_y.value = 8.23/2
     theta.value = np.pi
 
-def state6():
+def state6(servo):
     '''
     Deposit balls into the box
 
     Args:
-        None
+        servo (GPIOzero Servo class): Servo motor to open and close the latch
     '''
-    # TODO: create a function to open the latch with a servo
-    open_latch()
+    print('opening gate')
+    servo.value = -1
+    time.sleep(5)
+    
+    # sleeping to let balls fall out
+    print('closing gate')
+    servo.value = 1
     
 
     
