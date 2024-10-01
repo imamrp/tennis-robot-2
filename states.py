@@ -170,7 +170,7 @@ def state1(w_desired, ball_center):
       ball_center (multiproc variable): Current horizontal position of the ball in the frame. (-1 if not in frame)
     '''
     # start rotating
-    w_desired.value = 0.15    # TODO: test a good search rotation value
+    w_desired.value = 0.0    # TODO: test a good search rotation value
     print('rotating until ball found')
     
     # runs until ball seen
