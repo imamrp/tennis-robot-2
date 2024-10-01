@@ -16,7 +16,7 @@ def ctrl_gate(servo, open):
     """Opens and closes gate
     """
     servo.value = -1 if open else 1 # Open gate
-    sleep(1)
+    time.sleep(1)
 
 class DiffDriveRobot:
     """DiffDriveRobot class initiates the robot and its drive control. This class is to be called in a rapidly repeating process aside from the main process so that the motor can be continuously controlled. 
@@ -280,7 +280,7 @@ def set_speed_process(v_desired,w_desired):
         v_desired (float): The desired speed of the robot
     """
     PWM_pin = 11
-    servo = Servo(PWM_pin,min_pulse_width=0.001, max_pulse_width=0.002,frame_width=0.0025)    # min and max pulse width may need to be changed if rom not large enough
+    servo = Servo(PWM_pin,min_pulse_width=0.0008, max_pulse_width=0.002,frame_width=0.0025)    # min and max pulse width may need to be changed if rom not large enough
     ctrl_gate(servo, open=False)
     while True:
         # if bool(random.getrandbits(1)):
