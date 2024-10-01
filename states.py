@@ -216,7 +216,7 @@ def state3(v_desired, balls_collected):
     print('ball collected')
     return
 
-def state4(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_desired):
+def state4(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_desired, left_line_detected, right_line_detected):
     '''
     Drive robot to line in the positive y direction (line against courts 2 and 4) and stop when reached
 
@@ -228,6 +228,8 @@ def state4(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_desired):
         theta (multiproc variable): Current angle of robot
         w_desired (multiproc variable): Angular velocity of the robot (rad/s). Positive is moving counter clockwise (left).
         v_desired (multiproc variable): Linear velocity of the robot (m/s).
+        left_line_detected (multiproc variable): If the line is detected on the ground from the left RGB sensor.
+        right_line_detected (multiproc variable): If the line is detected on the ground from the right RGB sensor.
     '''
     # moving untill 1m away from centre of the line
     move_to_coord((5.48/2), ((8.23/2) - 1), robot_x, robot_y, theta, w_desired, v_desired)
@@ -242,7 +244,7 @@ def state4(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_desired):
     v_desired.value = 0.1
     line_detected = False
     while not line_detected:
-        line_detected = line_detector()    # TODO: change with actual function
+        line_detected = left_line_detected.value or right_line_detected.value
     print('line reached')
 
     # rotating to face away from the box
@@ -250,24 +252,24 @@ def state4(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_desired):
     desired_rotaion = np.pi - theta.value
     rotate_robot(w_desired, robot_theta, angle_to_turn = desired_rotation)
     
-def state5(v_desired, w_desired, ultrasonic_dist):
+def state5(v_desired, w_desired, box_distance, left_line_detected, right_line_detected):
     '''
     follow the line until close to the box
 
     Args:
         v_desired (multiproc variable): Linear velocity of the robot (m/s).
         w_desired (multiproc variable): Angular velocity of the robot (rad/s). Positive is moving counter clockwise (left).
-        ultrasonic_dist (multiproc variable): Distance from the box the ultrasonic sensor detects
+        box_distance (multiproc variable): Distance from the box the ultrasonic sensor detects.
+        left_line_detected (multiproc variable): If the line is detected on the ground from the left RGB sensor.
+        right_line_detected (multiproc variable): If the line is detected on the ground from the right RGB sensor.
     '''
     print('reversing down the line')
     v_desired.value = -0.05        # TODO: test reversing speed
-    ultrasonic_dist = 1000
-    while ultrasonic_dist > 10:    # TODO: test distance from box
-        ultrasonic_dist = get_ultra_dist()
-        lines_detected = line_detector()
-        if line_detected[0]:    # line on left detector
+    while box_distance.value > 10:    # TODO: test distance from box
+        # TODO: test alignment method
+        if left_line_detected:    # line on left detector
             w_desired.value -= 0.1
-        if line_detected[1]:
+        if right_line_detected:
             w_desired.value += 0.1
     print('box reached')
     v_desired.value = 0
