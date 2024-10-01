@@ -244,7 +244,7 @@ def state4(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_desired, 
     v_desired.value = 0.1
     line_detected = False
     while not line_detected:
-        line_detected = left_line_detected.value or right_line_detected.value
+        line_detected = left_line_detected.value == 1 or right_line_detected.value == 1
     print('line reached')
 
     # rotating to face away from the box
@@ -267,9 +267,9 @@ def state5(v_desired, w_desired, box_distance, left_line_detected, right_line_de
     v_desired.value = -0.05        # TODO: test reversing speed
     while box_distance.value > 10:    # TODO: test distance from box
         # TODO: test alignment method
-        if left_line_detected:    # line on left detector
+        if left_line_detected == 1:    # line on left detector
             w_desired.value -= 0.1
-        if right_line_detected:
+        if right_line_detected == 1:
             w_desired.value += 0.1
     print('box reached')
     v_desired.value = 0
