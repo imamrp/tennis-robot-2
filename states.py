@@ -216,13 +216,11 @@ def state3(v_desired, balls_collected):
     print('ball collected')
     return
 
-def state4(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_desired, left_line_detected, right_line_detected):
+def state4(robot_x, robot_y, theta, w_desired, v_desired, left_line_detected, right_line_detected):
     '''
     Drive robot to line in the positive y direction (line against courts 2 and 4) and stop when reached
 
     Args:
-        x_desired (float): Desired final x coordinate of the robot
-        y_desired (float): Desired final y coordinate of the robot
         robot_x (multiproc variable): Current x-coordinate of robot
         robot_y (multiproc variable): Current y-coordinate of robot
         theta (multiproc variable): Current angle of robot
