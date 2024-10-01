@@ -107,7 +107,7 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     """
 
     """Setup"""
-    state = 0
+    state = 1
     balls_collected = 0
 
     PWM_pin = 11
