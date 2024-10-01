@@ -280,7 +280,7 @@ def set_speed_process(v_desired,w_desired):
         v_desired (float): The desired speed of the robot
     """
     PWM_pin = 11
-    servo = Servo(PWM_pin,min_pulse_width=0.0008, max_pulse_width=0.002,frame_width=0.0025)    # min and max pulse width may need to be changed if rom not large enough
+    servo = Servo(PWM_pin,min_pulse_width=0.0008, max_pulse_width=0.0022,frame_width=0.0025)    # min and max pulse width may need to be changed if rom not large enough
     ctrl_gate(servo, open=False)
     while True:
         # if bool(random.getrandbits(1)):
