@@ -28,7 +28,7 @@ def update_ball_center(center, radius, use_cam): # Takes approximately 0.2s to p
     print("Ball detection process initiated...\n\n\n")
     detector = detection.TennisBallDetector()
     while True:
-        if use_cam.value is True:
+        if use_cam.value == 1:
             _, frame = detector.cap.read()
             detected_balls = detector.process_frame(frame)
             detected_center = detector.get_circle_1_center(detected_balls)
@@ -129,7 +129,7 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
         #### State 1: Find ball by rotating in place ####
         elif state == 1:
             print("State 1: Finding ball====================================\n\n\n")
-            use_cam.value = True
+            use_cam.value = 1
             print('camera activated: ',use_cam.value)
             states.state1(w_desired, center)
             state = 2
@@ -137,11 +137,11 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
         #### State 2: Align and move towards ball ####
         elif state == 2:
             print("State 2: Aligning with and moving to ball====================\n\n\n")
-            use_cam.value = True
+            use_cam.value = 1
             to_collect = states.state2(w_desired, v_desired, center, radius)
             if to_collect:
                 state = 3
-                use_cam.value = False
+                use_cam.value = 0
             else:
                 state = 1
             
@@ -185,7 +185,7 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
 #### Running File ####
 if __name__ == "__main__":
     '''Start the update_ball_center process'''
-    use_cam = multiprocessing.Value('b', False)
+    use_cam = multiprocessing.Value('i', 0)
     center = multiprocessing.Value('i', -1)
     radius = multiprocessing.Value('i', -1)
     center_process = multiprocessing.Process(target=update_ball_center, args=(center, radius, use_cam))
