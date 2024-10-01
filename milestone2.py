@@ -68,7 +68,7 @@ def update_ball_center(center, radius, use_cam): # Takes approximately 0.2s to p
             else:
                 center.value = -1
                 radius.value = -1
-            # print(f"X: {center.value} R: {radius.value}")
+            print(f"X: {center.value} R: {radius.value}")
         else:
             center.value = -1
             radius.value = -1
@@ -134,6 +134,7 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     PWM_pin = 11
     servo = Servo(PWM_pin,min_pulse_width=0.001, max_pulse_width=0.002,frame_width=0.0025)    # min and max pulse width may need to be changed if rom not large enough
     ctrl_gate(servo, open=False)
+    
     """While loop FSM"""
     while True:
         #### State 0: Orient and go to center from start ####
@@ -156,16 +157,19 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
         #### State 2: Align and move towards ball ####
         elif state == 2:
             print("State 2: Aligning with and moving to ball====================\n\n\n")
+            use_cam.value = True
             to_collect = states.state2(w_desired, v_desired, center, radius)
             if to_collect:
                 state = 3
+                use_cam.value = False
             else:
                 state = 1
             
         #### State 3: Collecting ball ####
         elif state == 3:
             print("State 3: Collecting ball====================================\n\n\n")
-            balls_collected = states.state3(v_desired, balls_collected)
+            states.state3(v_desired, balls_collected)
+            balls_collected += 1
             if balls_collected >= 3:
                 state = 4
             else:
@@ -190,6 +194,7 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
             states.state6(servo)
             state = 0
             # Open hatch
+            balls_collected = 0 
             
             # Drive forward a bit
         
