@@ -223,17 +223,16 @@ if __name__ == "__main__":
     motor_ctrl_process = multiprocessing.Process(target=robot_control_process, args=(v_desired, w_desired, robot_x, robot_y, theta))
     motor_ctrl_process.start()
 
-
-    '''Main process'''
-    main_process = multiprocessing.Process(target=milestone2_process, args=(v_desired, w_desired, center, radius, robot_x, robot_y, theta, use_cam, box_distance, left_line_detected, right_line_detected))
-    main_process.start()
-
     '''Sensor Process'''
     box_distance = multiprocessing.Value('f', 0)
     left_line_detected = multiprocessing.Value('b', False)
     right_line_detected = multiprocessing.Value('b', False)
     sensor_process = multiprocessing.Process(target=sensor_process, args=(box_distance, left_line_detected, right_line_detected))
     sensor_process.start()
+    
+    '''Main process'''
+    main_process = multiprocessing.Process(target=milestone2_process, args=(v_desired, w_desired, center, radius, robot_x, robot_y, theta, use_cam, box_distance, left_line_detected, right_line_detected))
+    main_process.start()
 
     '''Join processes'''
     motor_ctrl_process.join()
