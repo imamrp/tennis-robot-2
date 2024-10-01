@@ -129,8 +129,8 @@ def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=340
         w_desired.value = Kp*error
         
         alignment_error_sum += error
-        if center.value != -1:
-            print(f"Target w: {w_desired.value}, Center: {center.value}, Radius: {radius.value}")
+        if ball_center.value != -1:
+            print(f"Target w: {w_desired.value}, Center: {ball_center.value}, Radius: {radius.value}")
             lost_counter = 0
     
     if radius.value >= 50:    # ball collected successfully
