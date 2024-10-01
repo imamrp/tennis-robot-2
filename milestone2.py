@@ -168,7 +168,7 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
         #### State 4: Drive to lines ####
         elif state == 4:
             print("State 4: Driving to lines====================================\n\n\n")
-            states.state4(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_desired, left_line_detected, right_line_detected)
+            states.state4(robot_x, robot_y, theta, w_desired, v_desired, left_line_detected, right_line_detected)
             state = 5
         
         #### State 5: Follow line to the box (driving backwards) ####
