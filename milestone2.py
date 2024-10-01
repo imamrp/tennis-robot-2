@@ -7,35 +7,6 @@ from time import sleep
 
 
 #### Functions ####
-def allign_to_ball(ball_center:int, sum_error:int, desired_center=340, Kp=6e-4, Ki=1e-3):
-    """Function will return a forward velocity and the angular velocity needed to go towards a ball.
-    To determine the angular velocity, this function uses a PI controller.
-
-    Args:
-        ball_center (int): Current horizontal position of the ball in the frame.
-        sum_error (int): The accumulative sum of the error.
-        desired_center (int=340): The desired center of the ball
-        Kp (float): The proportional gain.
-        Ki (float): The integral gain.
-
-    Returns:
-        Tuple(float,float): The desired forward velocity and the desired angular velocity 
-    """
-    # If ball out of frame
-    if (ball_center==-1):
-        w_desired = 0
-        sum_error = 0
-        return w_desired, sum_error
-    
-    # Find error
-    error = desired_center - ball_center
-    
-    # PI controller for the desired w (limited to +/-1 rad/s)
-    w_desired = Kp*error
-    
-    sum_error += error
-    return w_desired, sum_error
-
 def ctrl_gate(servo, open):
     """Opens and closes gate
     """
@@ -76,6 +47,11 @@ def update_ball_center(center, radius, use_cam): # Takes approximately 0.2s to p
 def sensor_process(box_distance, left_line_detected, right_line_detected):
     """
         This process controls the Ultrasonic and RGB sensors
+
+        Args:
+            box_distance (float): distance in cm of object from the ultrasonic sensor
+            left_line_detected (bool): If the left rgb sensor detects change in colour in the ground 
+            right_line_detected (bool): If the right rgb sensor detects change in colour in the ground 
     """
     TRIG = 10
     ECHO = 9
@@ -181,13 +157,13 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
         #### State 4: Drive to lines ####
         elif state == 4:
             print("State 4: Driving to lines====================================\n\n\n")
-            states.state4(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_desired)
+            states.state4(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_desired, left_line_detected, right_line_detected)
             state = 5
         
         #### State 5: Follow line to the box (driving backwards) ####
         elif state == 5:
             print("State 5: Follow line to box=====================================\n\n\n")
-            states.state5(v_desired, w_desired, ultrasonic_dist)
+            states.state5(v_desired, w_desired, box_distance, left_line_detected, right_line_detected)
             state = 6
             # While ultrasonics read more than a certain length, follow the line and drive backwards
         
