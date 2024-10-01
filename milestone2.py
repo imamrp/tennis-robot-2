@@ -73,7 +73,7 @@ def update_ball_center(center, radius, use_cam): # Takes approximately 0.2s to p
             center.value = -1
             radius.value = -1
 
-def sensor_process():
+def sensor_process(box_distance, left_line_detected, right_line_detected):
     """
         This process controls the Ultrasonic and RGB sensors
     """
@@ -83,8 +83,8 @@ def sensor_process():
     rgb_sensor = RGBsensor.DualSensorReader(4)
     GPIO.output(4, GPIO.HIGH)
     while True:
-        print(rgb_sensor.is_line_detected())
-        # print('Distance: ', dist_sensor.distance * 100)
+        left_line_detected.value, right_line_detected.value = rgb_sensor.is_line_detected()
+        box_distance.value = dist_sensor.distance*100
         time.sleep(0.01)
 
 def robot_control_process(v_desired,w_desired, rotbot_x, robot_y, theta):
@@ -106,7 +106,7 @@ def robot_control_process(v_desired,w_desired, rotbot_x, robot_y, theta):
         robot_y.value = robot.y
         theta.value = robot.th
 
-def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, theta, use_cam):
+def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, theta, use_cam, box_distance, left_line_detected, right_line_detected):
     """The process that controls the finite state machine (FSM) for the milestone 2 task. States are numbered with integers as follows:
         State 0: State where the robot is first activated and moved to the center of the arena. Transitions: State 1
         State 1: State where the robot rotates in place until a ball is located. Transitions: State 2
@@ -125,6 +125,9 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
         robot_y (float): Current y-coordinate of robot
         theta (float): The angle of the robot with respect to the starting position. Positive is counter clockwise.
         use_cam (bool): Whether to turn the camera on or off
+        box_distance (float): The distance to the box in cm as measured by ultrasonic sensor
+        left_line_detected (bool): True if a line is detected by the LEFT RGB sensor.
+        right_line_detected (bool): True if a line is detected by the RIGHT RGB sensor.
     """
 
     """Setup"""
@@ -222,11 +225,14 @@ if __name__ == "__main__":
 
 
     '''Main process'''
-    main_process = multiprocessing.Process(target=milestone2_process, args=(v_desired, w_desired, center, radius, robot_x, robot_y, theta, use_cam))
+    main_process = multiprocessing.Process(target=milestone2_process, args=(v_desired, w_desired, center, radius, robot_x, robot_y, theta, use_cam, box_distance, left_line_detected, right_line_detected))
     main_process.start()
 
     '''Sensor Process'''
-    sensor_process = multiprocessing.Process(target=sensor_process)
+    box_distance = multiprocessing.Value('f', 0)
+    left_line_detected = multiprocessing.Value('b', False)
+    right_line_detected = multiprocessing.Value('b', False)
+    sensor_process = multiprocessing.Process(target=sensor_process, args=(box_distance, left_line_detected, right_line_detected))
     sensor_process.start()
 
     '''Join processes'''
