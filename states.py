@@ -214,9 +214,7 @@ def state3(v_desired, balls_collected):
     time.sleep(0.5)
     v_desired.value = 0
     print('ball collected')
-
-    balls_collected += 1
-    return balls_collected
+    return
 
 def state4(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_desired):
     '''
