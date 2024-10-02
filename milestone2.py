@@ -110,9 +110,20 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     state = 1
     balls_collected = 0
 
+    # servo setup
     PWM_pin = 11
     servo = Servo(PWM_pin,min_pulse_width=0.001, max_pulse_width=0.002,frame_width=0.0025)    # min and max pulse width may need to be changed if rom not large enough
     ctrl_gate(servo, open=False)
+
+    # collector motor setup
+    collect_motor = 22        
+    GPIO.setup(collect_motor, GPIO.OUT)
+    GPIO.output(collect_motor, GPIO.LOW)
+
+    # Eject ball setup (backward motor movement) TODO: implement hardware
+    # ejector_motor = 23
+    # GPIO.setup(ejector_motor, GPIO.OUT)
+    # GPIO.output(ejector_motor, GPIO.LOW)
 
     print('startup')
     time.sleep(1)
@@ -158,12 +169,25 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
         #### State 3: Collecting ball ####
         elif state == 3:
             print("State 3: Collecting ball====================================\n\n\n")
+            # starting motor
+            GPIO.output(collect_motor, GPIO.HIGH)
+            time.sleep(3)        # TODO: confirm if good amount of sleep time
+            
             states.state3(v_desired, balls_collected)
             balls_collected += 1
             if balls_collected >= 3:
                 state = 4
             else:
                 state = 1
+
+            # turning motor off
+            GPIO.output(collect_motor, GPIO.LOW)
+
+            # rotating motor other way to make sure ball doesnt stay stuck
+            # time.sleep(3)
+            # GPIO.output(ejector_motor, GPIO.HIGH)
+            # time.sleep(3)        # TODO: confirm if good amount of sleep time
+            # GPIO.output(ejector_motor, GPIO.LOW)
         
         #### State 4: Drive to lines ####
         elif state == 4:
