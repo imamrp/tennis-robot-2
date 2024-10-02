@@ -116,6 +116,7 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     ctrl_gate(servo, open=False)
 
     # collector motor setup
+    GPIO.setmode(GPIO.BCM)
     collect_motor = 22        
     GPIO.setup(collect_motor, GPIO.OUT)
     GPIO.output(collect_motor, GPIO.LOW)
