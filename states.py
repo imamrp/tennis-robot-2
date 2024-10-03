@@ -89,7 +89,7 @@ def move_to_coord(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_de
 
 ### Movement functions end ###
 
-def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=240, Kp=2e-4, Ki=1e-6, Kd=1e-6):
+def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=220, Kp=2e-4, Ki=1e-6, Kd=1e-6):
     """Function will return a forward velocity and the angular velocity needed to go towards a ball.
     To determine the angular velocity, this function uses a PI controller.
 
