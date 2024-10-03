@@ -10,10 +10,12 @@ class TennisBallDetector:
         self.input_details = self.interpreter.get_input_details()
         self.output_details = self.interpreter.get_output_details()
         self.cap = cv2.VideoCapture(0)
+        self.cap.set(cv2.CAP_PROP_EXPOSURE, -11)
 
     def process_frame(self, frame):
         input_shape = self.input_details[0]['shape']
         resized_frame = cv2.resize(frame, (input_shape[2], input_shape[1]))
+        #cv2.imshow('resized', resized_frame)
         input_data = np.expand_dims(resized_frame, axis=0)
 
         if self.input_details[0]['dtype'] == np.float32:
@@ -112,9 +114,10 @@ def main():
 
     while True:
         ret, frame = detector.cap.read()
+        
         if not ret:
             break
-
+        frame = frame[:, 80:560]
         detected_balls = detector.process_frame(frame)
         center = detector.get_circle_1_center(detected_balls)
         radius = detector.get_circle_1_radius(detected_balls)
@@ -131,7 +134,7 @@ def main():
             cv2.putText(circle_frame, label, (center[0] - 10, center[1] + 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-        # cv2.imshow('Tennis Ball Detection', circle_frame)
+        #cv2.imshow('Tennis Ball Detection', circle_frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
