@@ -107,7 +107,7 @@ def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=240
         ball_collected (bool): True if ball is navigated to successfully, False if ball is lost in collection process.
     """
     alignment_error_sum = 0
-    lost_counter = 0        # counter for how long the ball is lost for
+    counter = 0        # counter for how long the ball is lost for
     ball_collected = False
     while radius.value < 50:
         v_desired.value = 0.035 # Set slow forward speed
