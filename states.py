@@ -170,6 +170,7 @@ def state1(w_desired, ball_center):
       ball_center (multiproc variable): Current horizontal position of the ball in the frame. (-1 if not in frame)
     '''
     # start rotating
+    time.sleep(0.5)        # sleeping so ball stats update
     w_desired.value = 0.1    # TODO: test a good search rotation value
     print('rotating until ball found')
     
