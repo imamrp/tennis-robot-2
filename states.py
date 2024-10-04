@@ -162,7 +162,7 @@ def state0(robot_x, robot_y, theta, w_desired, v_desired):
     print('moving to center')
     move_to_coord((5.48/2), (8.23/4), robot_x, robot_y, theta, w_desired, v_desired)
 
-def state1(w_desired, ball_center):
+def state1(w_desired, ball_center, search_direction):
     '''
     Rotate in place and stop when ball is seen
     
@@ -172,12 +172,12 @@ def state1(w_desired, ball_center):
     '''
     # start rotating
     time.sleep(0.5)        # sleeping so ball stats update
-    w_desired.value = 0.2    # TODO: test a good search rotation value
+    w_desired.value = 0.2 * search_direction    # TODO: test a good search rotation value
     print('rotating until ball found')
     
     # runs until ball seen
     while ball_center.value == -1:
-        w_desired.value = 0.2
+        w_desired.value = 0.2 * search_direction
         time.sleep(0.1)
         if ball_center.value != -1:
             w_desired.value = 0
