@@ -10,7 +10,7 @@ class TennisBallDetector:
         self.input_details = self.interpreter.get_input_details()
         self.output_details = self.interpreter.get_output_details()
         self.cap = cv2.VideoCapture(0)
-        self.cap.set(cv2.CAP_PROP_EXPOSURE, -6)
+        self.cap.set(cv2.CAP_PROP_EXPOSURE, -4)
 
     def process_frame(self, frame):
         input_shape = self.input_details[0]['shape']
