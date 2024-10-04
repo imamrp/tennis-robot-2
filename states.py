@@ -89,7 +89,7 @@ def move_to_coord(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_de
 
 ### Movement functions end ###
 
-def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=220, Kp=3e-4, Ki=1e-6, Kd=1e-6):
+def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=220, desired_radius=50, Kp=2e-4, Ki=1e-6, Kd=1e-6):
     """Function will return a forward velocity and the angular velocity needed to go towards a ball.
     To determine the angular velocity, this function uses a PI controller.
 
@@ -109,7 +109,7 @@ def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=220
     alignment_error_sum = 0
     counter = 0        # counter for how long the ball is lost for
     ball_collected = False
-    while radius.value < 50:
+    while radius.value < desired_radius:
         time.sleep(0.1)
         v_desired.value = 0.025 # Set slow forward speed
         # Get the desired rotational velocity
