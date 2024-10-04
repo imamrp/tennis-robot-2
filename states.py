@@ -110,7 +110,7 @@ def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=220
     counter = 0        # counter for how long the ball is lost for
     ball_collected = False
     while radius.value < 50:
-        v_desired.value = 0.035 # Set slow forward speed
+        v_desired.value = 0.025 # Set slow forward speed
         # Get the desired rotational velocity
         # If ball out of frame
         if (ball_center.value==-1):
