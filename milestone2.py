@@ -115,7 +115,7 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     # servo setup
     PWM_pin = 11
     GPIO.setup(11, GPIO.OUT)
-    pwm = GPIO.PWM(16, 50)
+    pwm = GPIO.PWM(11, 50)
     pwm.start(0) # Start the servo with 0 duty cycle ( at 0 deg position )
     pwm.ChangeDutyCycle(5) # Tells the servo to turn to the left ( -90 deg position )
     time.sleep(5) # Tells the servo to Delay for 5sec
