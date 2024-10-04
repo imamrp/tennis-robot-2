@@ -112,7 +112,7 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     balls_collected = 0
 
     # servo setup
-    PWM_pin = 25
+    PWM_pin = 11
     servo = Servo(PWM_pin,min_pulse_width=0.001, max_pulse_width=0.002,frame_width=0.0025)    # min and max pulse width may need to be changed if rom not large enough
     ctrl_gate(servo, open=False)
 
