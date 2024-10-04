@@ -24,7 +24,7 @@ def move_forward(v_desired, robot_x, robot_y, dist, Kp = 6e-2):
     start_y = robot_y.value
     error = dist
     while error > 0.01:        # runs until 1cm of target
-        v_desired.value = 0.1
+        v_desired.value = 0.2
         # finding the distance travelled and comparing to input
         x_travelled = robot_x.value - start_x
         y_travelled = robot_y.value - start_y
@@ -172,12 +172,12 @@ def state1(w_desired, ball_center, search_direction):
     '''
     # start rotating
     time.sleep(0.5)        # sleeping so ball stats update
-    w_desired.value = 0.2 * search_direction    # TODO: test a good search rotation value
+    w_desired.value = 0.15 * search_direction    # TODO: test a good search rotation value
     print('rotating until ball found')
     
     # runs until ball seen
     while ball_center.value == -1:
-        w_desired.value = 0.2 * search_direction
+        w_desired.value = 0.15 * search_direction
         time.sleep(0.1)
         if ball_center.value != -1:
             w_desired.value = 0
@@ -217,8 +217,8 @@ def state3(v_desired, balls_collected):
         balls_collected (int): Returns the new amount of balls in the collection after new one
     '''
     # Move forward for a bit
-    v_desired.value = 0.1
-    time.sleep(3)
+    v_desired.value = 0.2
+    time.sleep(6)
     v_desired.value = 0
     print('ball collected')
     return
