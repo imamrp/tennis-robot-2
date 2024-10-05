@@ -8,7 +8,7 @@ class DualSensorReader:
     SENSOR1_POWER_PIN = 17
     SENSOR2_POWER_PIN = 27
     LED_PIN = 4
-    WAKEUP_TIME = 0.1
+    WAKEUP_TIME = 0.01
 
     def __init__(self, threshold = 50):
         GPIO.setmode(GPIO.BCM)
@@ -30,8 +30,9 @@ class DualSensorReader:
     def init_sensor(self):
         i2c = board.I2C()
         sensor = adafruit_tcs34725.TCS34725(i2c)
-        sensor.integration_time = 600
-        sensor.gain = 60
+        # gain 60 and 600 int time worked
+        sensor.integration_time = 50
+        sensor.gain = 600
         return sensor
 
     def read_sensor(self, sensor):
