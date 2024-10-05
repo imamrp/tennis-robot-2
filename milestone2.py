@@ -108,7 +108,7 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     """
 
     """Setup"""
-    state = 5
+    state = 4
     balls_collected = 0
     search_direction = 1
     GPIO.setmode(GPIO.BCM)
