@@ -56,7 +56,7 @@ class DualSensorReader:
     
     def colour_difference(self, rgbA, rgbB):
         delta = (rgbA[0]-rgbB[0], rgbA[1]-rgbB[1], rgbA[2]-rgbB[2])
-        result = math.sqrt(abs(delta[0])^2 + abs(delta[1])^2 + abs(delta[2])^2)
+        result = math.sqrt(abs(delta[0])**2 + abs(delta[1])**2 + abs(delta[2])**2)
         return result
 
     def set_base_colour(self):
