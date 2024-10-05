@@ -65,6 +65,7 @@ class DualSensorReader:
         self.threshold = threshold
     
     def is_line_detected(self):
+        print('left rgb', rgbL, 'right rgb', rgbR)
         rgbR, rgbL = self.read_both_sensors()
         detectR = self.colour_difference(rgbR, self.base_colourR) > self.threshold
         detectL = self.colour_difference(rgbL, self.base_colourL) > self.threshold
