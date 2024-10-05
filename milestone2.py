@@ -57,7 +57,7 @@ def sensor_process(box_distance, left_line_detected, right_line_detected):
     TRIG = 10
     ECHO = 9
     dist_sensor = gpiozero.DistanceSensor(echo=ECHO,trigger=TRIG, max_distance=1.0)
-    rgb_sensor = RGBsensor.DualSensorReader(threshold = 7)
+    rgb_sensor = RGBsensor.DualSensorReader(threshold = 5)
     GPIO.output(4, GPIO.HIGH)
     while True:
         left_line_detected.value, right_line_detected.value = rgb_sensor.is_line_detected()
