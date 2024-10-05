@@ -272,10 +272,13 @@ def state5(v_desired, w_desired, box_distance, left_line_detected, right_line_de
     v_desired.value = -0.05        # TODO: test reversing speed
     while box_distance.value > 10:    # TODO: test distance from box
         # TODO: test alignment method
-        if left_line_detected == 1:    # line on left detector
-            w_desired.value -= 0.1
-        if right_line_detected == 1:
-            w_desired.value += 0.1
+        # if left_line_detected == 1:    # line on left detector
+        #     w_desired.value -= 0.1
+        # if right_line_detected == 1:
+        #     w_desired.value += 0.1
+        v_desired.value = -0.05
+        w_desired.value = 0
+        
     print('box reached')
     v_desired.value = 0
     w_desired.value = 0
