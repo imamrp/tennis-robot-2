@@ -255,7 +255,7 @@ def state4(robot_x, robot_y, theta, w_desired, v_desired, left_line_detected, ri
 
     # rotating to face away from the box
     print('rotating on line')
-    desired_rotaion = np.pi - theta.value
+    desired_rotation = np.pi - theta.value
     rotate_robot(w_desired, theta, angle_to_turn = desired_rotation)
     
 def state5(robot_x, robot_y, theta, v_desired, w_desired, box_distance, left_line_detected, right_line_detected):
