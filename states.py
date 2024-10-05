@@ -278,6 +278,8 @@ def state5(v_desired, w_desired, box_distance, left_line_detected, right_line_de
         #     w_desired.value += 0.1
         v_desired.value = -0.05
         w_desired.value = 0
+        print(f"Box Distance (cm): {box_distance.value}")
+        time.sleep(0.1)
         
     print('box reached')
     v_desired.value = 0
