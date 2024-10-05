@@ -246,7 +246,7 @@ def state4(robot_x, robot_y, theta, w_desired, v_desired, left_line_detected, ri
     # print('facing the line')
 
     # moving toward line until detected
-    v_desired.value = 0.1
+    v_desired.value = 0.05
     line_detected = False
     while not line_detected:
         line_detected = left_line_detected.value == 1 or right_line_detected.value == 1
