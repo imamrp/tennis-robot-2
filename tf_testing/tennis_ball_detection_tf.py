@@ -3,16 +3,16 @@ import numpy as np
 import tensorflow as tf
 
 class TennisBallDetector:
-    def __init__(self, model_path="detect.tflite", min_conf=0.6):
+    def __init__(self, model_path="detect_new.tflite", min_conf=0.6):
         self.min_conf = min_conf
         self.interpreter = tf.lite.Interpreter(model_path=model_path)
         self.interpreter.allocate_tensors()
         self.input_details = self.interpreter.get_input_details()
         self.output_details = self.interpreter.get_output_details()
         self.cap = cv2.VideoCapture(0)
-        self.cap.set(cv2.CAP_PROP_EXPOSURE, -11)
+        #self.cap.set(cv2.CAP_PROP_EXPOSURE, -11)
 
-    def process_frame(self, frame):
+    def process_frame(self, frame, zoom_in = False):
         input_shape = self.input_details[0]['shape']
         resized_frame = cv2.resize(frame, (input_shape[2], input_shape[1]))
         #cv2.imshow('resized', resized_frame)
@@ -44,7 +44,7 @@ class TennisBallDetector:
 
         detected_balls = sorted(detected_balls, key=lambda x: -x[1])
 
-        if not detected_balls:
+        if not detected_balls and zoom_in:
             print("Processing in sections")
             detected_balls = self.process_frame_in_sections(frame)
 
@@ -118,7 +118,7 @@ def main():
         if not ret:
             break
         frame = frame[:, 80:560]
-        detected_balls = detector.process_frame(frame)
+        detected_balls = detector.process_frame(frame, True)
         center = detector.get_circle_1_center(detected_balls)
         radius = detector.get_circle_1_radius(detected_balls)
         if center:
@@ -134,7 +134,7 @@ def main():
             cv2.putText(circle_frame, label, (center[0] - 10, center[1] + 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-        #cv2.imshow('Tennis Ball Detection', circle_frame)
+        cv2.imshow('Tennis Ball Detection', circle_frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
