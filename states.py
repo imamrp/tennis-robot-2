@@ -251,6 +251,7 @@ def state4(robot_x, robot_y, theta, w_desired, v_desired, left_line_detected, ri
     while not line_detected:
         line_detected = left_line_detected.value == 1 or right_line_detected.value == 1
         print('left rgb: ', left_line_detected.value, 'right rgb', right_line_detected.value)
+        time.sleep(0.1)
     print('line reached')
 
     # rotating to face away from the box
