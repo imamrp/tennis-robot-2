@@ -1,6 +1,6 @@
-from inference import get_model
-import supervision as sv
 import cv2
+import supervision as sv
+from inference import get_model
 
 while True:
     # define the image url to use for inference
