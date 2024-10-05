@@ -60,13 +60,25 @@ class DualSensorReader:
         return result
 
     def set_base_colour(self):
-        # averaging across 2 readings
+        # averaging across 3 readings
         base_colourR1, base_colourL1 = self.read_both_sensors()
         time.sleep(0.2)
         base_colourR2, base_colourL2 = self.read_both_sensors()
-        
-        self.base_colourR = (base_colourR1 + base_colourR2) / 2
-        self.base_colourL = (base_colourL1 + base_colourL2) / 2
+        time.sleep(0.2)
+        base_colourR3, base_colourL3 = self.read_both_sensors()
+
+        # init
+        self.base_colourR, self.base_colourL = base_colourR3, base_colourL3
+
+        # right avg
+        self.base_colourR[0] = (base_colourR1[0] + base_colourR2[0] + base_colourR3[0]) / 3
+        self.base_colourR[1] = (base_colourR1[1] + base_colourR2[1] + base_colourR3[1]) / 3
+        self.base_colourR[2] = (base_colourR1[2] + base_colourR2[2] + base_colourR3[2]) / 3
+
+        # left avg
+        self.base_colourL[0] = (base_colourL1[0] + base_colourL2[0] + base_colourL3[0]) / 3
+        self.base_colourL[1] = (base_colourL1[1] + base_colourL2[1] + base_colourL3[1]) / 3
+        self.base_colourL[2] = (base_colourL1[2] + base_colourL2[2] + base_colourL3[2]) / 3
 
     def set_threshold(self, threshold):
         self.threshold = threshold
