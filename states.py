@@ -237,24 +237,27 @@ def state4(robot_x, robot_y, theta, w_desired, v_desired, left_line_detected, ri
         right_line_detected (multiproc variable): If the line is detected on the ground from the right RGB sensor.
     '''
     # moving untill 1m away from centre of the line
-    move_to_coord((5.48/2), ((8.23/2) - 1), robot_x, robot_y, theta, w_desired, v_desired)
-    print('1m away from line')
+    # move_to_coord((5.48/2), ((8.23/2) - 1), robot_x, robot_y, theta, w_desired, v_desired)
+    # print('1m away from line')
 
-    # rotating to face line
-    desired_rotation = np.pi/2 - theta.value
-    rotate_robot(w_desired, theta, angle_to_turn = desired_rotation)
-    print('facing the line')
+    # # rotating to face line
+    # desired_rotation = np.pi/2 - theta.value
+    # rotate_robot(w_desired, theta, angle_to_turn = desired_rotation)
+    # print('facing the line')
 
     # moving toward line until detected
-    v_desired.value = 0.1
+    v_desired.value = 0.05
     line_detected = False
     while not line_detected:
         line_detected = left_line_detected.value == 1 or right_line_detected.value == 1
+        print('left rgb: ', left_line_detected.value, 'right rgb', right_line_detected.value)
+        time.sleep(0.1)
     print('line reached')
 
     # rotating to face away from the box
     print('rotating on line')
-    desired_rotaion = np.pi - theta.value
+    #desired_rotation = np.pi - theta.value # TODO: revert back in final
+    desired_rotation = np.pi/2
     rotate_robot(w_desired, theta, angle_to_turn = desired_rotation)
     
 def state5(robot_x, robot_y, theta, v_desired, w_desired, box_distance, left_line_detected, right_line_detected):

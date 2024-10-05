@@ -57,7 +57,7 @@ def sensor_process(box_distance, left_line_detected, right_line_detected):
     TRIG = 10
     ECHO = 9
     dist_sensor = gpiozero.DistanceSensor(echo=ECHO,trigger=TRIG, max_distance=1.0)
-    rgb_sensor = RGBsensor.DualSensorReader(4)
+    rgb_sensor = RGBsensor.DualSensorReader(threshold = 7)
     GPIO.output(4, GPIO.HIGH)
     while True:
         left_line_detected.value, right_line_detected.value = rgb_sensor.is_line_detected()
@@ -108,7 +108,7 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     """
 
     """Setup"""
-    state = 5
+    state = 4
     balls_collected = 0
     search_direction = 1
     GPIO.setmode(GPIO.BCM)

@@ -8,7 +8,7 @@ class DualSensorReader:
     SENSOR1_POWER_PIN = 17
     SENSOR2_POWER_PIN = 27
     LED_PIN = 4
-    WAKEUP_TIME = 0.003
+    WAKEUP_TIME = 0.01
 
     def __init__(self, threshold = 50):
         GPIO.setmode(GPIO.BCM)
@@ -30,7 +30,8 @@ class DualSensorReader:
     def init_sensor(self):
         i2c = board.I2C()
         sensor = adafruit_tcs34725.TCS34725(i2c)
-        sensor.integration_time = 2.4
+        # gain 60 and 600 int time worked
+        sensor.integration_time = 154
         sensor.gain = 60
         return sensor
 
@@ -66,8 +67,10 @@ class DualSensorReader:
     
     def is_line_detected(self):
         rgbR, rgbL = self.read_both_sensors()
+        print('left rgb', rgbL, 'right rgb', rgbR)
         detectR = self.colour_difference(rgbR, self.base_colourR) > self.threshold
         detectL = self.colour_difference(rgbL, self.base_colourL) > self.threshold
+        print('left colour diff: ', self.colour_difference(rgbL, self.base_colourL), 'right colour diff: ', self.colour_difference(rgbR, self.base_colourR)) 
         return (detectL, detectR)
 
 # Test
