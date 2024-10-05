@@ -10,7 +10,7 @@ class DualSensorReader:
     LED_PIN = 4
     WAKEUP_TIME = 0.003
 
-    def __init__(self, threshold = 70):
+    def __init__(self, threshold = 50):
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.SENSOR1_POWER_PIN, GPIO.OUT)
         GPIO.setup(self.SENSOR2_POWER_PIN, GPIO.OUT)
