@@ -253,6 +253,7 @@ def state4(robot_x, robot_y, theta, w_desired, v_desired, left_line_detected, ri
         print('left rgb: ', left_line_detected.value, 'right rgb', right_line_detected.value)
         time.sleep(0.1)
     print('line reached')
+    v_desired.value = 0
 
     # rotating to face away from the box
     print('rotating on line')
