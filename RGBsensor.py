@@ -32,7 +32,7 @@ class DualSensorReader:
         sensor = adafruit_tcs34725.TCS34725(i2c)
         # gain 60 and 600 int time worked
         sensor.integration_time = 50
-        sensor.gain = 600
+        sensor.gain = 1
         return sensor
 
     def read_sensor(self, sensor):
