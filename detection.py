@@ -43,9 +43,9 @@ class TennisBallDetector:
 
         detected_balls = sorted(detected_balls, key=lambda x: -x[1])
 
-        if not detected_balls:
-            # print("Processing in sections")
-            detected_balls = self.process_frame_in_sections(frame)
+        # if not detected_balls:
+        #     # print("Processing in sections")
+        #     detected_balls = self.process_frame_in_sections(frame)
 
         return detected_balls
 
