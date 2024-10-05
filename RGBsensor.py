@@ -69,6 +69,7 @@ class DualSensorReader:
 
         # init
         self.base_colourR, self.base_colourL = base_colourR3, base_colourL3
+        print(self.base_colourR)
 
         # right avg
         self.base_colourR[0] = (base_colourR1[0] + base_colourR2[0] + base_colourR3[0]) / 3
