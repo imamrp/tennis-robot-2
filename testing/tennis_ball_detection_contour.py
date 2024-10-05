@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-class TennisBallDetector:
+class TennisBallColorDetector:
     def __init__(self, lower_color=np.array([30, 40, 40]), upper_color=np.array([90, 255, 255])):
         self.lower_color = lower_color
         self.upper_color = upper_color
@@ -58,7 +58,7 @@ class TennisBallDetector:
         cv2.destroyAllWindows()
 
 def main():
-    detector = TennisBallDetector()
+    detector = TennisBallColorDetector()
 
     while True:
         # Capture frame-by-frame
