@@ -3,7 +3,7 @@ import numpy as np
 import tensorflow as tf
 
 class TennisBallDetector:
-    def __init__(self, model_path="tf_testing/detect.tflite", min_conf=0.8):
+    def __init__(self, model_path="tf_testing/detect_new.tflite", min_conf=0.8):
         self.min_conf = min_conf
         self.interpreter = tf.lite.Interpreter(model_path=model_path)
         self.interpreter.allocate_tensors()
@@ -12,7 +12,7 @@ class TennisBallDetector:
         self.cap = cv2.VideoCapture(0)
         self.cap.set(cv2.CAP_PROP_EXPOSURE, -4)
 
-    def process_frame(self, frame):
+    def process_frame(self, frame, zoom_in = False):
         input_shape = self.input_details[0]['shape']
         resized_frame = cv2.resize(frame, (input_shape[2], input_shape[1]))
         input_data = np.expand_dims(resized_frame, axis=0)
@@ -43,9 +43,9 @@ class TennisBallDetector:
 
         detected_balls = sorted(detected_balls, key=lambda x: -x[1])
 
-        # if not detected_balls:
-        #     # print("Processing in sections")
-        #     detected_balls = self.process_frame_in_sections(frame)
+        if not detected_balls and zoom_in:
+            print("Processing in sections")
+            detected_balls = self.process_frame_in_sections(frame)
 
         return detected_balls
 
