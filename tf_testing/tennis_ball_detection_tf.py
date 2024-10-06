@@ -10,7 +10,7 @@ class TennisBallDetector:
         self.input_details = self.interpreter.get_input_details()
         self.output_details = self.interpreter.get_output_details()
         self.cap = cv2.VideoCapture(0)
-        #self.cap.set(cv2.CAP_PROP_EXPOSURE, -11)
+        self.cap.set(cv2.CAP_PROP_EXPOSURE, -4)
 
     def process_frame(self, frame, zoom_in = False):
         input_shape = self.input_details[0]['shape']
@@ -117,8 +117,10 @@ def main():
         
         if not ret:
             break
-        frame = frame[:, 80:560]
-        detected_balls = detector.process_frame(frame, True)
+        fH, fW, _ =  frame.shape
+        size = 200
+        frame = frame[int((fH/2)-size/2):int((fH/2)+size/2), int((fW/2)-size/2):int((fW/2)+size/2)]
+        detected_balls = detector.process_frame(frame, False)
         center = detector.get_circle_1_center(detected_balls)
         radius = detector.get_circle_1_radius(detected_balls)
         if center:
