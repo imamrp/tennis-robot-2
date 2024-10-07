@@ -12,14 +12,14 @@ GPIO.setup(servo_pin,GPIO.OUT)
 # setup PWM process
 pwm = GPIO.PWM(servo_pin,50) # 50 Hz (20 ms PWM period)
 
-pwm.start(14) # start PWM by rotating to 90 degrees
+pwm.start(0) # start PWM by rotating to 90 degrees
 
 for i in range(5):
-    pwm.ChangeDutyCycle(8.0) # rotate to 0 degrees
+    pwm.ChangeDutyCycle(12.0) # rotate to 0 degrees
     time.sleep(3)
-    pwm.ChangeDutyCycle(24.0) # rotate to 180 degrees
+    pwm.ChangeDutyCycle(4.0) # rotate to 180 degrees
     time.sleep(3)
-    pwm.ChangeDutyCycle(14.0) # rotate to 90 degrees
+    pwm.ChangeDutyCycle(8.0) # rotate to 90 degrees
     time.sleep(3)
 
 pwm.ChangeDutyCycle(0) # this prevents jitter
