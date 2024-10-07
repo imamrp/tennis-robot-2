@@ -47,7 +47,7 @@ def rotate_robot(w_desired, robot_theta, angle_to_turn, Kp = 6e-1):
     start_theta = robot_theta.value
     error = angle_to_turn
     while abs(error) > 0.01:
-        w_desired.value = error * Kp
+        w_desired.value = 0.3
         angle_turned = robot_theta.value - start_theta
         error = angle_to_turn - angle_turned
     w_desired.value = 0
@@ -280,11 +280,11 @@ def state5(robot_x, robot_y, theta, v_desired, w_desired, box_distance, left_lin
     print('reversing down the line')
     v_desired.value = -0.05        # TODO: test reversing speed
     while box_distance.value > 10:    # TODO: test distance from box
-        # TODO: test alignment method
-        # if left_line_detected == 1:    # line on left detector
-        #     w_desired.value -= 0.1
-        # if right_line_detected == 1:
-        #     w_desired.value += 0.1
+        TODO: test alignment method
+        if left_line_detected == 1:    # line on left detector
+            w_desired.value -= 0.1
+        if right_line_detected == 1:
+            w_desired.value += 0.1
         v_desired.value = -0.05
         w_desired.value = 0
         print(f"Box Distance (cm): {box_distance.value}")
