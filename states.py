@@ -145,10 +145,6 @@ def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=240
 
     return ball_collected
 
-def line_detector():
-    # placeholder until implemented
-    return None 
-
 ### State Functions ###
 def state0(robot_x, robot_y, theta, w_desired, v_desired):
     '''
@@ -220,7 +216,7 @@ def state3(v_desired, balls_collected):
     '''
     # Move forward for a bit
     v_desired.value = 0.2
-    time.sleep(6)
+    time.sleep(4.5)
     v_desired.value = 0
     print('ball collected')
     return
