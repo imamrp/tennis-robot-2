@@ -16,11 +16,11 @@ pwm.start(7) # start PWM by rotating to 90 degrees
 
 for i in range(5):
     pwm.ChangeDutyCycle(2.0) # rotate to 0 degrees
-    time.sleep(0.5)
+    time.sleep(3)
     pwm.ChangeDutyCycle(12.0) # rotate to 180 degrees
-    time.sleep(0.5)
+    time.sleep(3)
     pwm.ChangeDutyCycle(7.0) # rotate to 90 degrees
-    time.sleep(0.5)
+    time.sleep(3)
 
 pwm.ChangeDutyCycle(0) # this prevents jitter
 pwm.stop() # stops the pwm on 13
