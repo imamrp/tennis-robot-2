@@ -119,7 +119,7 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     servo_pin = 11
     GPIO.setup(servo_pin,GPIO.OUT)
     servo = GPIO.PWM(servo_pin,50) # 50 Hz (20 ms PWM period)
-    pwm.start(7) # start PWM by rotating to 90 degrees
+    servo.start(7) # start PWM by rotating to 90 degrees
     ctrl_gate(servo, open=False)
     
 
