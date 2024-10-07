@@ -1,4 +1,5 @@
 from gpiozero import Servo, PWMOutputDevice
+import RPi.GPIO as GPIO
 from time import sleep
 
 # Connect servo to GPIO11
