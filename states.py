@@ -111,9 +111,15 @@ def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=240
     alignment_error_sum = 0
     counter = 0        # counter for how long the ball is lost for
     ball_collected = False
+    start_time = time.time()
     while radius.value < desired_radius:
+        # only rotate for the first 5 sec
+        if time.time() - start_time < 5:
+            v_desired.value = 0
+        else:
+            v_desired.value = 0.025 # Set slow forward speed
+            
         time.sleep(0.1)
-        v_desired.value = 0.025 # Set slow forward speed
         # Get the desired rotational velocity
         # If ball out of frame
         if (ball_center.value==-1):
