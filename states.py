@@ -31,6 +31,7 @@ def move_forward(v_desired, robot_x, robot_y, dist, Kp = 6e-2):
         distance_travelled = (x_travelled**2 + y_travelled**2) ** 0.5
         error = dist - distance_travelled
         #print('v desired ', v_desired.value)
+    v_desired.value = 0
 
 def rotate_robot(w_desired, robot_theta, angle_to_turn, Kp = 6e-1):
     '''
@@ -49,6 +50,7 @@ def rotate_robot(w_desired, robot_theta, angle_to_turn, Kp = 6e-1):
         w_desired.value = error * Kp
         angle_turned = robot_theta.value - start_theta
         error = angle_to_turn - angle_turned
+    w_desired.value = 0
         
 
 def move_to_coord(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_desired):
@@ -261,6 +263,8 @@ def state4(robot_x, robot_y, theta, w_desired, v_desired, left_line_detected, ri
     #desired_rotation = np.pi - theta.value # TODO: revert back in final
     desired_rotation = np.pi/2
     rotate_robot(w_desired, theta, angle_to_turn = desired_rotation)
+    print('rotation finished')
+    time.sleep(3)
     
 def state5(robot_x, robot_y, theta, v_desired, w_desired, box_distance, left_line_detected, right_line_detected):
     '''
