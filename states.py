@@ -282,12 +282,13 @@ def state5(robot_x, robot_y, theta, v_desired, w_desired, box_distance, left_lin
     while box_distance.value > 10:    # TODO: test distance from box
         # TODO: test alignment method
         if left_line_detected == 1:    # line on left detector
-            w_desired.value -= 0.1
+            w_desired.value -= 0.2
         if right_line_detected == 1:
-            w_desired.value += 0.1
+            w_desired.value += 0.2
         v_desired.value = -0.05
         w_desired.value = 0
         print(f"Box Distance (cm): {box_distance.value}")
+        print('w_desired = ', w_desired.value)
         time.sleep(0.1)
         
     print('box reached')
