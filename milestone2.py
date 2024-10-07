@@ -31,9 +31,9 @@ def update_ball_center(center, radius, use_cam): # Takes approximately 0.2s to p
         if use_cam.value == 1:
             _, frame = detector.cap.read()
             fH, fW, _ =  frame.shape
-            size = 200
+            size = 480
             frame = frame[int((fH/2)-size/2):int((fH/2)+size/2), int((fW/2)-size/2):int((fW/2)+size/2)]
-            detected_balls = detector.process_frame(frame)
+            detected_balls = detector.process_frame(frame, True)
             detected_center = detector.get_circle_1_center(detected_balls)
             detected_radius = detector.get_circle_1_radius(detected_balls)
             if detected_center:

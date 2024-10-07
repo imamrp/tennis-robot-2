@@ -56,7 +56,7 @@ class TennisBallDetector:
         detected_balls = []
 
         for i in range(3):
-            section = frame[third_H:third_H*2, i*third_W:(i+1)*third_W]
+            section = frame[0:third_H, i*third_W:(i+1)*third_W]
             input_shape = self.input_details[0]['shape']
             resized_section = cv2.resize(section, (input_shape[2], input_shape[1]))
             input_data = np.expand_dims(resized_section, axis=0)
@@ -79,8 +79,8 @@ class TennisBallDetector:
 
                     scaled_xmin = xmin * third_W / input_shape[2]
                     scaled_xmax = xmax * third_W / input_shape[2]
-                    scaled_ymin = ymin * third_H / input_shape[1] + third_H
-                    scaled_ymax = ymax * third_H / input_shape[1] + third_H
+                    scaled_ymin = ymin * third_H / input_shape[1]
+                    scaled_ymax = ymax * third_H / input_shape[1]
 
                     center_x = int((scaled_xmin + scaled_xmax) / 2) + i * third_W
                     center_y = int((scaled_ymin + scaled_ymax) / 2)
