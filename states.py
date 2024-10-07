@@ -173,6 +173,7 @@ def state1(w_desired, ball_center, search_direction):
     Args:
       w_desired (multiproc variable): Angular velocity of the robot (rad/s). Positive is moving counter clockwise (left).
       ball_center (multiproc variable): Current horizontal position of the ball in the frame. (-1 if not in frame)
+      search_direction (int): The direction the robot will move to search for ball. (1 for turning right, -1 for left)
     '''
     # start rotating
     time.sleep(5)        # sleeping so ball stats update
