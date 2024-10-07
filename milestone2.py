@@ -10,7 +10,7 @@ from time import sleep
 def ctrl_gate(servo, open):
     """Opens and closes gate
     """
-    servo.ChangeDutyCycle(12.0) if open else servo.ChangeDutyCycle(2.0) # Open gate
+    servo.ChangeDutyCycle(2.0) if open else servo.ChangeDutyCycle(12.0) # Open gate
     sleep(1)
 
 #### Processes ####
