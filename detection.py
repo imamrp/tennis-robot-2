@@ -3,14 +3,14 @@ import numpy as np
 import tensorflow as tf
 
 class TennisBallDetector:
-    def __init__(self, model_path="tf_testing/detect_new.tflite", min_conf=0.6):
+    def __init__(self, model_path="tf_testing/detect_new.tflite", min_conf=0.2):
         self.min_conf = min_conf
         self.interpreter = tf.lite.Interpreter(model_path=model_path)
         self.interpreter.allocate_tensors()
         self.input_details = self.interpreter.get_input_details()
         self.output_details = self.interpreter.get_output_details()
         self.cap = cv2.VideoCapture(0)
-        self.cap.set(cv2.CAP_PROP_EXPOSURE, -9)
+        self.cap.set(cv2.CAP_PROP_EXPOSURE, -11)
 
     def process_frame(self, frame, zoom_in = False):
         input_shape = self.input_details[0]['shape']
