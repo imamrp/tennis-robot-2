@@ -29,7 +29,7 @@ servo = Servo(PWM_pin,min_pulse_width=0.005, max_pulse_width=0.0176,frame_width=
 
 def ctrl_gate(servo, open):
     servo.value = -1 if open else 1 # Open gate
-    sleep(1)
+    time.sleep(1)
 
 for j in range(5):
     print("close")
