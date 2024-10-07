@@ -85,10 +85,10 @@ class DualSensorReader:
     
     def is_line_detected(self):
         rgbR, rgbL = self.read_both_sensors()
-        print('left rgb', rgbL, 'right rgb', rgbR)
+        # print('left rgb', rgbL, 'right rgb', rgbR)
         detectR = self.colour_difference(rgbR, self.base_colourR) > self.threshold
         detectL = self.colour_difference(rgbL, self.base_colourL) > self.threshold
-        print('left colour diff: ', self.colour_difference(rgbL, self.base_colourL), 'right colour diff: ', self.colour_difference(rgbR, self.base_colourR)) 
+        # print('left colour diff: ', self.colour_difference(rgbL, self.base_colourL), 'right colour diff: ', self.colour_difference(rgbR, self.base_colourR)) 
         return (detectL, detectR)
 
 # Test
