@@ -31,6 +31,7 @@ def move_forward(v_desired, robot_x, robot_y, dist, Kp = 6e-2):
         distance_travelled = (x_travelled**2 + y_travelled**2) ** 0.5
         error = dist - distance_travelled
         #print('v desired ', v_desired.value)
+    v_desired.value = 0
 
 def rotate_robot(w_desired, robot_theta, angle_to_turn, Kp = 6e-1):
     '''
@@ -45,10 +46,11 @@ def rotate_robot(w_desired, robot_theta, angle_to_turn, Kp = 6e-1):
     # finding start theta value as reference
     start_theta = robot_theta.value
     error = angle_to_turn
-    while abs(error) > 0.01:
-        w_desired.value = error * Kp
+    while error > 0.01:
+        w_desired.value = 0.3
         angle_turned = robot_theta.value - start_theta
         error = angle_to_turn - angle_turned
+    w_desired.value = 0
         
 
 def move_to_coord(x_desired, y_desired, robot_x, robot_y, theta, w_desired, v_desired):
@@ -254,12 +256,15 @@ def state4(robot_x, robot_y, theta, w_desired, v_desired, left_line_detected, ri
         time.sleep(0.1)
     print('line reached')
     v_desired.value = 0
+    time.sleep(3)
 
     # rotating to face away from the box
     print('rotating on line')
     #desired_rotation = np.pi - theta.value # TODO: revert back in final
     desired_rotation = np.pi/2
     rotate_robot(w_desired, theta, angle_to_turn = desired_rotation)
+    print('rotation finished')
+    time.sleep(3)
     
 def state5(robot_x, robot_y, theta, v_desired, w_desired, box_distance, left_line_detected, right_line_detected):
     '''
@@ -276,14 +281,18 @@ def state5(robot_x, robot_y, theta, v_desired, w_desired, box_distance, left_lin
     v_desired.value = -0.05        # TODO: test reversing speed
     while box_distance.value > 10:    # TODO: test distance from box
         # TODO: test alignment method
-        # if left_line_detected == 1:    # line on left detector
-        #     w_desired.value -= 0.1
-        # if right_line_detected == 1:
-        #     w_desired.value += 0.1
+        if left_line_detected.value == 1:    # line on left detector
+            print('left line hit')
+            w_desired.value = -0.2
+            time.sleep(0.5)
+        if right_line_detected.value == 1:
+            print('right line hit')
+            w_desired.value = 0.2
+            time.sleep(0.5)
         v_desired.value = -0.05
         w_desired.value = 0
-        print(f"Box Distance (cm): {box_distance.value}")
-        time.sleep(0.1)
+        # print(f"Box Distance (cm): {box_distance.value}")
+        time.sleep(0.2)
         
     print('box reached')
     v_desired.value = 0
