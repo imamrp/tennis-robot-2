@@ -136,7 +136,7 @@ def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=240
             print(f"Target w: {w_desired.value}, Center: {ball_center.value}, Radius: {radius.value}")
             lost_counter = 0
     
-    if radius.value >= 50:    # ball collected successfully
+    if radius.value >= desired_radius:    # ball collected successfully
         ball_collected = True
             
     # Stop at the ball
