@@ -288,7 +288,7 @@ def state5(robot_x, robot_y, theta, v_desired, w_desired, box_distance, left_lin
         v_desired.value = -0.05
         print(f"Box Distance (cm): {box_distance.value}")
         print('w_desired = ', w_desired.value)
-        time.sleep(0.3)
+        time.sleep(0.2)
         
     print('box reached')
     v_desired.value = 0
