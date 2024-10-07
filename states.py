@@ -281,10 +281,10 @@ def state5(robot_x, robot_y, theta, v_desired, w_desired, box_distance, left_lin
     v_desired.value = -0.05        # TODO: test reversing speed
     while box_distance.value > 10:    # TODO: test distance from box
         # TODO: test alignment method
-        if left_line_detected == 1:    # line on left detector
-            w_desired.value -= 0.2
-        if right_line_detected == 1:
-            w_desired.value += 0.2
+        if left_line_detected.value == 1:    # line on left detector
+            w_desired.value -= 0.1
+        if right_line_detected.value == 1:
+            w_desired.value += 0.1
         v_desired.value = -0.05
         w_desired.value = 0
         print(f"Box Distance (cm): {box_distance.value}")
