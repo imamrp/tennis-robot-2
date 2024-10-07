@@ -46,7 +46,7 @@ def rotate_robot(w_desired, robot_theta, angle_to_turn, Kp = 6e-1):
     # finding start theta value as reference
     start_theta = robot_theta.value
     error = angle_to_turn
-    while abs(error) > 0.01:
+    while error > 0.01:
         w_desired.value = 0.3
         angle_turned = robot_theta.value - start_theta
         error = angle_to_turn - angle_turned
