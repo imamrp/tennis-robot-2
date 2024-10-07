@@ -10,7 +10,7 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(servo_pin,GPIO.OUT)
 
 # setup PWM process
-pwm = GPIO.PWM(servo_pin,50) # 50 Hz (20 ms PWM period)
+pwm = GPIO.PWM(servo_pin,100) # 50 Hz (20 ms PWM period)
 
 pwm.start(7) # start PWM by rotating to 90 degrees
 
