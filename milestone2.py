@@ -2,7 +2,7 @@ from robotClasses import DiffDriveRobot
 import RPi.GPIO as GPIO
 import detection, multiprocessing, time, RGBsensor, gpiozero, states
 
-from gpiozero import Servo, PWMOutputDevice
+from gpiozero import PWMOutputDevice
 from time import sleep
 
 
@@ -10,7 +10,7 @@ from time import sleep
 def ctrl_gate(servo, open):
     """Opens and closes gate
     """
-    servo.value = -1 if open else 1 # Open gate
+    servo.ChangeDutyCycle(12.0) if open else servo.ChangeDutyCycle(2.0) # Open gate
     sleep(1)
 
 #### Processes ####
@@ -116,8 +116,10 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
     GPIO.setmode(GPIO.BCM)
 
     # servo setup
-    PWM_pin = 11
-    servo = Servo(PWM_pin,min_pulse_width=0.002, max_pulse_width=0.0044,frame_width=0.005)    # min and max pulse width may need to be changed if rom not large enough
+    servo_pin = 11
+    GPIO.setup(servo_pin,GPIO.OUT)
+    servo = GPIO.PWM(servo_pin,50) # 50 Hz (20 ms PWM period)
+    pwm.start(7) # start PWM by rotating to 90 degrees
     ctrl_gate(servo, open=False)
     
 
