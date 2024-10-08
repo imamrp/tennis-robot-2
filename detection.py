@@ -39,7 +39,8 @@ class TennisBallDetector:
                 center_y = int((ymin + ymax) / 2)
                 radius = int(max((xmax - xmin), (ymax - ymin)) / 2)
 
-                detected_balls.append(((center_x, center_y), radius))
+                if radius < 120:
+                    detected_balls.append(((center_x, center_y), radius))
 
         detected_balls = sorted(detected_balls, key=lambda x: -x[1])
 
