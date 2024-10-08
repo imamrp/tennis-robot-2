@@ -256,7 +256,7 @@ def state4(robot_x, robot_y, theta, w_desired, v_desired, left_line_detected, ri
         left_line_detected (multiproc variable): If the line is detected on the ground from the left RGB sensor.
         right_line_detected (multiproc variable): If the line is detected on the ground from the right RGB sensor.
     '''
-    moving untill 1m away from centre of the line
+    # moving untill 1m away from centre of the line
     move_to_coord((5.35/2), ((8.0/2) - 1), robot_x, robot_y, theta, w_desired, v_desired)
     print('1m away from line')
 
