@@ -182,15 +182,15 @@ def state1(w_desired, ball_center, search_direction):
     '''
     # start rotating
     time.sleep(5)        # sleeping so ball stats update
-    w_desired.value = 0.15 * search_direction    # TODO: test a good search rotation value
+    w_desired.value = 0.8 * search_direction    # TODO: test a good search rotation value
     print('rotating until ball found')
     
     # runs until ball seen
     while ball_center.value == -1:
-        w_desired.value = 0.5 * search_direction
+        w_desired.value = 0.8 * search_direction
         time.sleep(0.5)
         w_desired.value = 0
-        time.sleep(0.5)
+        time.sleep(3)
         # confirming ball is seen
         if ball_center.value != -1:
             ball_seen_counter = 0
