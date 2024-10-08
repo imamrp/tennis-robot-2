@@ -3,7 +3,7 @@ import numpy as np
 import tensorflow as tf
 
 class TennisBallDetector:
-    def __init__(self, model_path="tf_testing/detect_new.tflite", min_conf=0.25):
+    def __init__(self, model_path="tf_testing/detect_new.tflite", min_conf=0.2):
         self.min_conf = min_conf
         self.interpreter = tf.lite.Interpreter(model_path=model_path)
         self.interpreter.allocate_tensors()
