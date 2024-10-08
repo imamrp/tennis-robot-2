@@ -169,7 +169,7 @@ def state0(robot_x, robot_y, theta, w_desired, v_desired):
         v_desired (multiproc variable): Linear velocity of the robot (m/s).
     '''
     print('moving to center')
-    move_to_coord((5.48/2), (8.23/4), robot_x, robot_y, theta, w_desired, v_desired)
+    move_to_coord((5.35/2), (4.0/2), robot_x, robot_y, theta, w_desired, v_desired)
 
 def state1(w_desired, ball_center, search_direction):
     '''
@@ -256,14 +256,14 @@ def state4(robot_x, robot_y, theta, w_desired, v_desired, left_line_detected, ri
         left_line_detected (multiproc variable): If the line is detected on the ground from the left RGB sensor.
         right_line_detected (multiproc variable): If the line is detected on the ground from the right RGB sensor.
     '''
-    # moving untill 1m away from centre of the line
-    # move_to_coord((5.48/2), ((8.23/2) - 1), robot_x, robot_y, theta, w_desired, v_desired)
-    # print('1m away from line')
+    moving untill 1m away from centre of the line
+    move_to_coord((5.35/2), ((8.0/2) - 1), robot_x, robot_y, theta, w_desired, v_desired)
+    print('1m away from line')
 
-    # # rotating to face line
-    # desired_rotation = np.pi/2 - theta.value
-    # rotate_robot(w_desired, theta, angle_to_turn = desired_rotation)
-    # print('facing the line')
+    # rotating to face line
+    desired_rotation = np.pi/2 - theta.value
+    rotate_robot(w_desired, theta, angle_to_turn = desired_rotation)
+    print('facing the line')
 
     # moving toward line until detected
     v_desired.value = 0.05
@@ -317,8 +317,8 @@ def state5(robot_x, robot_y, theta, v_desired, w_desired, box_distance, left_lin
     w_desired.value = 0
 
     # TODO: test update values
-    robot_x.value = 5.48 - 0.2
-    robot_y.value = 8.23/2
+    robot_x.value = 5.35 - 0.1
+    robot_y.value = 8.1/2
     theta.value = np.pi
 
 def state6(servo):
