@@ -110,9 +110,10 @@ def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=240
     """
     alignment_error_sum = 0
     counter = 0        # counter for how long the ball is lost for
+    seen_counter = 0
     ball_collected = False
     start_time = time.time()
-    while radius.value < desired_radius:
+    while radius.value < desired_radius and seen_counter < 3:
         # only rotate for the first 5 sec
         if time.time() - start_time < 5:
             v_desired.value = 0
@@ -140,7 +141,11 @@ def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=240
         alignment_error_sum += error
         if ball_center.value != -1:
             print(f"Target w: {w_desired.value}, Center: {ball_center.value}, Radius: {radius.value}")
-            lost_counter = 0
+            counter = 0
+        if radius.value < desired_radius:
+            seen_counter += 1
+        else:
+            seen_counter = 0
     
     if radius.value >= desired_radius:    # ball collected successfully
         ball_collected = True
