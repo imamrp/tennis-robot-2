@@ -148,7 +148,11 @@ def milestone2_process(v_desired, w_desired, center, radius, rotbot_x, robot_y, 
         #### State 0: Orient and go to center from start ####
         if state == 0:
             print("State 0: Traversing to center==============================\n\n\n")
+            GPIO.output(collect_motor, GPIO.HIGH)
+            time.sleep(3) 
             states.state0(robot_x, robot_y, theta, w_desired, v_desired)
+            # turning motor off
+            GPIO.output(collect_motor, GPIO.LOW)
             # Orient to center
             state = 1
             
