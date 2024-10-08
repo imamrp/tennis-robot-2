@@ -142,7 +142,7 @@ def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=240
         if ball_center.value != -1:
             print(f"Target w: {w_desired.value}, Center: {ball_center.value}, Radius: {radius.value}")
             counter = 0
-        if radius.value < desired_radius:
+        if radius.value >= desired_radius:
             seen_counter += 1
         else:
             seen_counter = 0
