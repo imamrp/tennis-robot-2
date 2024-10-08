@@ -187,16 +187,18 @@ def state1(w_desired, ball_center, search_direction):
     
     # runs until ball seen
     while ball_center.value == -1:
-        w_desired.value = 0.15 * search_direction
-        time.sleep(0.1)
+        w_desired.value = 0.3 * search_direction
+        time.sleep(0.5)
+        w_desired.value = 0
+        time.sleep(0.5)
         # confirming ball is seen
         if ball_center.value != -1:
             ball_seen_counter = 0
             w_desired.value = 0
-            while ball_center.value != 1 and ball_seen_counter < 5:
+            while ball_center.value != 1 and ball_seen_counter < 3:
                 ball_seen_counter += 1
                 time.sleep(0.1)
-            if ball_seen_counter >= 5:
+            if ball_seen_counter >= 3:
                 break
             ball_seen_counter = 0
         
