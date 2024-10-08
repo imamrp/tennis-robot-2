@@ -187,7 +187,7 @@ def state1(w_desired, ball_center, search_direction):
     
     # runs until ball seen
     while ball_center.value == -1:
-        w_desired.value = 0.3 * search_direction
+        w_desired.value = 0.5 * search_direction
         time.sleep(0.5)
         w_desired.value = 0
         time.sleep(0.5)
