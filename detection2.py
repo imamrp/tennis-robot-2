@@ -23,6 +23,7 @@ class TennisBallDetector:
             img_out: image with bounding boxes and class labels drawn on
         """
         bboxes = self._get_bounding_boxes(img)
+        detected_balls = []
         # draw bounding boxes on the image
         for bbox in bboxes:
             #  translate bounding box info back to the format of [x1,y1,x2,y2]
