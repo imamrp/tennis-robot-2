@@ -353,12 +353,12 @@ def state6(servo):
         servo (GPIOzero Servo class): Servo motor to open and close the latch
     '''
     print('opening gate')
-    servo.ChangeDutyCycle(4.0)
+    servo.ChangeDutyCycle(12.0)
     time.sleep(5)
     
     # sleeping to let balls fall out
     print('closing gate')
-    servo.ChangeDutyCycle(12.0)
+    servo.ChangeDutyCycle(4.0)
     
 
     
