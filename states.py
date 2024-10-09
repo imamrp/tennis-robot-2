@@ -131,6 +131,7 @@ def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=320
         # If ball out of frame
         if (ball_center.value==-1):
             w_desired.value = 0
+            v_desired.value = 0
             alignment_error_sum = 0
             time.sleep(0.2)
             counter += 1
