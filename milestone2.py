@@ -27,13 +27,16 @@ def update_ball_center(center, radius, use_cam): # Takes approximately 0.2s to p
     """
     print("Ball detection process initiated...\n\n\n")
     detector = detection2.TennisBallDetector()
+    detect_counter = 3
     while True:
         if use_cam.value == 1:
             _, frame = detector.cap.read()
             # fH, fW, _ =  frame.shape
             # size = 640
             # frame = frame[int((fH/2)-size/2):int((fH/2)+size/2), int((fW/2)-size/2):int((fW/2)+size/2)]
-            detected_balls = detector.process_frame(frame, True)
+            if detect_counter >= 3:
+                detected_balls = detector.process_frame(frame, True)
+                detect_counter = 0
             detected_center = detector.get_circle_1_center(detected_balls)
             detected_radius = detector.get_circle_1_radius(detected_balls)
             if detected_center:
@@ -43,6 +46,7 @@ def update_ball_center(center, radius, use_cam): # Takes approximately 0.2s to p
                 center.value = -1
                 radius.value = -1
             print(f"X: {center.value} R: {radius.value}")
+            detect_counter += 1
         else:
             center.value = -1
             radius.value = -1
