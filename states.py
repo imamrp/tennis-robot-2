@@ -293,8 +293,8 @@ def state4(robot_x, robot_y, theta, w_desired, v_desired, left_line_detected, ri
 
     # rotating to face away from the box
     print('rotating on line')
-    #desired_rotation = np.pi - theta.value # TODO: revert back in final
-    desired_rotation = np.pi/2
+    desired_rotation = np.pi - theta.value # TODO: revert back in final
+    #desired_rotation = np.pi/2
     rotate_robot(w_desired, theta, angle_to_turn = desired_rotation)
     print('rotation finished')
     time.sleep(3)
