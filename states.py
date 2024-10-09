@@ -145,7 +145,10 @@ def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=320
         # if time.time() - start_time < 8:
         #     w_desired.value = Kp1*error        # stationary movement
         # else: 
-        w_desired.value = Kp2*error
+        if radius.value > 20:
+            w_desired.value = Kp2*error/2 # halve the kp if the ball is close
+        else:
+            w_desired.value = Kp2*error
         
         alignment_error_sum += error
         if ball_center.value != -1:
