@@ -68,3 +68,15 @@ class TennisBallDetector:
                 bounding_boxes.append(box_cord)
 
         return bounding_boxes
+
+    def get_circle_1_center(self, detected_balls):
+        if len(detected_balls) > 0:
+            return detected_balls[0][0]
+        else:
+            return None
+    
+    def get_circle_1_radius(self, detected_balls):
+        if len(detected_balls) > 0:
+            return detected_balls[0][1]
+        else:
+            return None
