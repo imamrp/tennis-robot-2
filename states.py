@@ -151,13 +151,13 @@ def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=320
             if w_desired.value < 0:
                 w_desired.value = w_desired.value * 6
             else:
-                w_desired.value = w_desired.value * (3/4)
+                w_desired.value = w_desired.value * (1/2)
         else:
             w_desired.value = Kp2*error
             if w_desired.value < 0:
                 w_desired.value = w_desired.value * 6
             else:
-                w_desired.value = w_desired.value * (3/4)
+                w_desired.value = w_desired.value * (1/2)
         
         alignment_error_sum += error
         if ball_center.value != -1:
