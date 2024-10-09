@@ -316,11 +316,11 @@ def state5(robot_x, robot_y, theta, v_desired, w_desired, box_distance, left_lin
         # TODO: test alignment method
         if left_line_detected.value == 1:    # line on left detector
             print('left line hit')
-            w_desired.value = -0.2
+            w_desired.value = -0.1
             time.sleep(0.5)
         if right_line_detected.value == 1:
             print('right line hit')
-            w_desired.value = 0.2
+            w_desired.value = 0.1
             time.sleep(0.5)
         v_desired.value = -0.05
         w_desired.value = 0
