@@ -27,8 +27,8 @@ class TennisBallDetector:
         # draw bounding boxes on the image
         for bbox in bboxes:
             #  translate bounding box info back to the format of [x1,y1,x2,y2]
-            center_x = bbox[0]
-            center_y = bbox[1]
+            center_x = int(bbox[0])
+            center_y = int(bbox[1])
             radius = int(max((bbox[2]), (bbox[3])))
 
             if radius < 100 and radius > 1: # TODO retest radius
