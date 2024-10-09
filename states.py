@@ -190,7 +190,7 @@ def state1(w_desired, ball_center, search_direction):
         w_desired.value = 1 * search_direction
         time.sleep(1.6)
         w_desired.value = 0
-        time.sleep(5)
+        time.sleep(7)
         # confirming ball is seen
         if ball_center.value != -1:
             search_direction = search_direction * -1
