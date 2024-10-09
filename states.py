@@ -114,7 +114,7 @@ def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=320
     ball_collected = False
     pause_counter = 0
     start_time = time.time()
-    while (radius.value < desired_radius and seen_counter < 3) or (abs(ball_center.value-desired_center) > 150 and radius.value >= desired_radius):
+    while radius.value < desired_radius and seen_counter < 3:
         if pause_counter >= 100:
             v_desired.value = 0
             w_desired.value = 0
@@ -124,7 +124,7 @@ def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=320
         # if time.time() - start_time < 8:
         #     v_desired.value = 0
         # else:
-        v_desired.value = 0.025 if (abs(ball_center.value-desired_center) > 150 and radius.value >= desired_radius) else 0 # Set slow forward speed
+        v_desired.value = 0.025 # Set slow forward speed
             
         time.sleep(0.1)
         # Get the desired rotational velocity
@@ -355,4 +355,3 @@ def state6(servo):
     
     
   
-
