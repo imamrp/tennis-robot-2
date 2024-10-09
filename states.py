@@ -115,9 +115,10 @@ def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=320
     pause_counter = 0
     start_time = time.time()
     while radius.value < desired_radius and seen_counter < 3:
-        if counter >= 100:
+        if pause_counter >= 100:
             v_desired.value = 0
             w_desired.value = 0
+            pause_counter = 0
             time.sleep(5)
         # only rotate for the first 5 sec
         # if time.time() - start_time < 8:
