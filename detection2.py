@@ -29,7 +29,7 @@ class TennisBallDetector:
             #  translate bounding box info back to the format of [x1,y1,x2,y2]
             center_x = int(bbox[0])
             center_y = int(bbox[1])
-            radius = int(max((bbox[2]), (bbox[3])))
+            radius = int(max((bbox[2]), (bbox[3])) / 2)
 
             if radius < 100 and radius > 1: # TODO retest radius
                 detected_balls.append(((center_x, center_y), radius))
