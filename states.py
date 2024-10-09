@@ -24,7 +24,7 @@ def move_forward(v_desired, robot_x, robot_y, dist, Kp = 6e-2):
     start_y = robot_y.value
     error = dist
     while error > 0.01:        # runs until 1cm of target
-        v_desired.value = 0.1
+        v_desired.value = 0.15
         # finding the distance travelled and comparing to input
         x_travelled = robot_x.value - start_x
         y_travelled = robot_y.value - start_y
