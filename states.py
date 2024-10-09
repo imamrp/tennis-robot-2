@@ -278,6 +278,7 @@ def state4(robot_x, robot_y, theta, w_desired, v_desired, left_line_detected, ri
     # moving untill 1m away from centre of the line
     move_to_coord((5.35/2), ((8.0/2) - 1), robot_x, robot_y, theta, w_desired, v_desired)
     print('1m away from line')
+    time.sleep(3)
 
     # rotating to face line
     desired_rotation = np.pi/2 - theta.value
