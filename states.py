@@ -288,6 +288,7 @@ def state4(robot_x, robot_y, theta, w_desired, v_desired, left_line_detected, ri
     desired_rotation = np.pi/2 - theta.value
     rotate_robot(w_desired, theta, angle_to_turn = desired_rotation)
     print('facing the line')
+    time.sleep(2)
 
     # moving toward line until detected
     v_desired.value = 0.05
