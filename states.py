@@ -272,13 +272,13 @@ def state4(robot_x, robot_y, theta, w_desired, v_desired, left_line_detected, ri
         right_line_detected (multiproc variable): If the line is detected on the ground from the right RGB sensor.
     '''
     # moving untill 1m away from centre of the line
-    move_to_coord((5.35/2), ((8.0/2) - 1), robot_x, robot_y, theta, w_desired, v_desired)
-    print('1m away from line')
+    # move_to_coord((5.35/2), ((8.0/2) - 1), robot_x, robot_y, theta, w_desired, v_desired)
+    # print('1m away from line')
 
-    # rotating to face line
-    desired_rotation = np.pi/2 - theta.value
-    rotate_robot(w_desired, theta, angle_to_turn = desired_rotation)
-    print('facing the line')
+    # # rotating to face line
+    # desired_rotation = np.pi/2 - theta.value
+    # rotate_robot(w_desired, theta, angle_to_turn = desired_rotation)
+    # print('facing the line')
 
     # moving toward line until detected
     v_desired.value = 0.05
