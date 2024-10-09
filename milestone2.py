@@ -1,6 +1,6 @@
 from robotClasses import DiffDriveRobot
 import RPi.GPIO as GPIO
-import detection, multiprocessing, time, RGBsensor, gpiozero, states
+import detection2, multiprocessing, time, RGBsensor, gpiozero, states
 
 from gpiozero import PWMOutputDevice
 from time import sleep
@@ -26,7 +26,7 @@ def update_ball_center(center, radius, use_cam): # Takes approximately 0.2s to p
         None
     """
     print("Ball detection process initiated...\n\n\n")
-    detector = detection.TennisBallDetector()
+    detector = detection2.TennisBallDetector()
     while True:
         if use_cam.value == 1:
             _, frame = detector.cap.read()
