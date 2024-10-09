@@ -7,12 +7,8 @@ from ultralytics.utils import ops
 
 
 class TennisBallDetector:
-    def __init__(self, model_path = ="tf_testing/best.pt"):
+    def __init__(self, model_path = "tf_testing/best.pt"):
         self.model = YOLO(model_path)
-
-        self.class_colour = {
-            'tennis-ball': (0, 165, 255)
-        }
         self.cap = cv2.VideoCapture(0)
         self.cap.set(cv2.CAP_PROP_EXPOSURE, -11)
 
@@ -27,9 +23,6 @@ class TennisBallDetector:
             img_out: image with bounding boxes and class labels drawn on
         """
         bboxes = self._get_bounding_boxes(img)
-
-        img_out = deepcopy(img)
-
         # draw bounding boxes on the image
         for bbox in bboxes:
             #  translate bounding box info back to the format of [x1,y1,x2,y2]
@@ -37,7 +30,7 @@ class TennisBallDetector:
             center_y = bboxes[1]
             radius = int(max((bboxes[2]), (bboxes[3])))
 
-            if radius < 100 and radius > 1:
+            if radius < 100 and radius > 1: # TODO retest radius
                 detected_balls.append(((center_x, center_y), radius))
         detected_balls = sorted(detected_balls, key=lambda x: -x[1])
 
