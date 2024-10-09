@@ -149,13 +149,13 @@ def allign_to_ball(w_desired, v_desired, ball_center, radius, desired_center=320
         if radius.value > 20:
             w_desired.value = Kp2*error/2 # halve the kp if the ball is close
             if w_desired.value < 0:
-                w_desired.value = w_desired.value * 4
+                w_desired.value = w_desired.value * 6
             else:
                 w_desired.value = w_desired.value * (3/4)
         else:
             w_desired.value = Kp2*error
             if w_desired.value < 0:
-                w_desired.value = w_desired.value * 4
+                w_desired.value = w_desired.value * 6
             else:
                 w_desired.value = w_desired.value * (3/4)
         
@@ -353,12 +353,12 @@ def state6(servo):
         servo (GPIOzero Servo class): Servo motor to open and close the latch
     '''
     print('opening gate')
-    servo.ChangeDutyCycle(12.0)
+    servo.ChangeDutyCycle(4.0)
     time.sleep(5)
     
     # sleeping to let balls fall out
     print('closing gate')
-    servo.ChangeDutyCycle(4.0)
+    servo.ChangeDutyCycle(12.0)
     
 
     
